@@ -1,6 +1,8 @@
 from django.apps import AppConfig
 
 
-class NbaAppConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
+class NbaComparatorConfig(AppConfig):
     name = 'nba_app'
+
+    def ready(self):
+        import nba_app.templatetags.custom_filters

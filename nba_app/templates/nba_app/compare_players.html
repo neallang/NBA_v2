@@ -1,4 +1,5 @@
-<!-- nba_comparator/templates/nba_comparator/compare_players.html -->
+{% load custom_filters %}
+<!-- nba_app/templates/nba_app/compare_players.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,26 +16,20 @@
 
     {% if player1_info and player2_info %}
         <h2>
-            {{ player1_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }} vs
-            {{ player2_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}
+            {{ player1_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }} vs
+            {{ player2_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}
         </h2>
         <table>
             <tr>
                 <th>Stat</th>
-                <th>{{ player1_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
-                <th>{{ player2_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
+                <th>{{ player1_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
+                <th>{{ player2_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
             </tr>
             <tr>
-                <td>Team</td>
-                <td>{{ player1_info.CommonPlayerInfo.0.TEAM_NAME }}</td>
-                <td>{{ player2_info.CommonPlayerInfo.0.TEAM_NAME }}</td>
+                <td>Career PPG</td>
+                <td>{{ player1_info.career_ppg }}</td>
+                <td>{{ player2_info.career_ppg }}</td>
             </tr>
-            <tr>
-                <td>Position</td>
-                <td>{{ player1_info.CommonPlayerInfo.0.POSITION }}</td>
-                <td>{{ player2_info.CommonPlayerInfo.0.POSITION }}</td>
-            </tr>
-            <!-- Add more stats as needed -->
         </table>
     {% endif %}
 </body>
