@@ -1,0 +1,41 @@
+<!-- nba_comparator/templates/nba_comparator/compare_players.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Compare NBA Players</title>
+</head>
+<body>
+    <h1>Compare NBA Players</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Compare</button>
+    </form>
+
+    {% if player1_info and player2_info %}
+        <h2>
+            {{ player1_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }} vs
+            {{ player2_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}
+        </h2>
+        <table>
+            <tr>
+                <th>Stat</th>
+                <th>{{ player1_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
+                <th>{{ player2_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
+            </tr>
+            <tr>
+                <td>Team</td>
+                <td>{{ player1_info.CommonPlayerInfo.0.TEAM_NAME }}</td>
+                <td>{{ player2_info.CommonPlayerInfo.0.TEAM_NAME }}</td>
+            </tr>
+            <tr>
+                <td>Position</td>
+                <td>{{ player1_info.CommonPlayerInfo.0.POSITION }}</td>
+                <td>{{ player2_info.CommonPlayerInfo.0.POSITION }}</td>
+            </tr>
+            <!-- Add more stats as needed -->
+        </table>
+    {% endif %}
+</body>
+</html>
