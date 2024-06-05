@@ -1,16 +1,24 @@
-{% load custom_filters %}
-<!-- nba_app/templates/nba_app/compare_players.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Compare NBA Players</title>
+    <!-- Include jQuery and jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body>
     <h1>Compare NBA Players</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="autocomplete" style="width:300px;">
+            <input id="player1" type="text" name="player1" placeholder="Player 1">
+        </div>
+        <div class="autocomplete" style="width:300px;">
+            <input id="player2" type="text" name="player2" placeholder="Player 2">
+        </div>
         <button type="submit">Compare</button>
     </form>
 
@@ -32,5 +40,33 @@
             </tr>
         </table>
     {% endif %}
+
+    <script>
+        $(document).ready(function() {
+            function setupAutocomplete(inputId) {
+                $(inputId).autocomplete({
+                    source: function(request, response) {
+                        $.ajax({
+                            url: "/",
+                            dataType: "json",
+                            data: {
+                                q: request.term
+                            },
+                            success: function(data) {
+                                response(data.map(player => player.full_name));
+                            }
+                        });
+                    },
+                    minLength: 2,
+                    select: function(event, ui) {
+                        $(inputId).val(ui.item.value);
+                    }
+                });
+            }
+
+            setupAutocomplete("#player1");
+            setupAutocomplete("#player2");
+        });
+    </script>
 </body>
 </html>

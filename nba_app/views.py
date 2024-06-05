@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from .forms import PlayerSearchForm
 from nba_api.stats.static import players
 from nba_api.stats.endpoints import commonplayerinfo, playercareerstats
@@ -20,7 +21,14 @@ def get_player_info(player_name):
             'career_ppg': career_ppg
         }
     return None
+
 def compare_players(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        query = request.GET.get('q', '')
+        player_dict = players.get_players()
+        filtered_players = [player for player in player_dict if query.lower() in player['full_name'].lower()]
+        return JsonResponse(filtered_players, safe=False)
+
     form = PlayerSearchForm()
     player1_info = player2_info = None
 
