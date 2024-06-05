@@ -29,14 +29,24 @@
         </h2>
         <table>
             <tr>
-                <th>Stat</th>
+                <th>Stat (per game)</th>
                 <th>{{ player1_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
                 <th>{{ player2_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
             </tr>
             <tr>
-                <td>Career PPG</td>
+                <td>Career PTS</td>
                 <td>{{ player1_info.career_ppg }}</td>
                 <td>{{ player2_info.career_ppg }}</td>
+            </tr>
+            <tr>
+                <td>Career AST</td>
+                <td>{{ player1_info.career_apg }}</td>
+                <td>{{ player2_info.career_apg }}</td>
+            </tr>
+            <tr>
+                <td>Career REB</td>
+                <td>{{ player1_info.career_rpg }}</td>
+                <td>{{ player2_info.career_rpg }}</td>
             </tr>
         </table>
     {% endif %}

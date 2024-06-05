@@ -12,13 +12,23 @@ def get_player_info(player_name):
         career_stats = playercareerstats.PlayerCareerStats(player_id=player['id']).get_normalized_dict()
         career_totals = career_stats['CareerTotalsRegularSeason'][0]
         career_ppg = career_totals['PTS']
+        career_apg = career_totals['AST']
+        career_rpg = career_totals['REB']
         games_played = career_totals['GP']
         if games_played > 0:
             career_ppg /= games_played
             career_ppg = round(career_ppg, 1)
+
+            career_apg /= games_played
+            career_apg = round(career_apg, 1)
+
+            career_rpg /= games_played
+            career_rpg = round(career_rpg, 1)
         return {
             'player_info': player_info,
-            'career_ppg': career_ppg
+            'career_ppg': career_ppg,
+            'career_apg': career_apg,
+            'career_rpg': career_rpg
         }
     return None
 
