@@ -52,6 +52,21 @@ tr:hover {
     background-color: #ddd;
 }
 
+tr.image-row {
+    background-color: transparent;
+    border: none;
+}
+
+tr.image-row:hover {
+    background-color: transparent;
+}
+
+td.image-cell {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+}
+
 button {
     background-color: #007bff;
     color: white;
@@ -101,9 +116,4 @@ button:hover {
     width: 130px;
     height: 190px;
     object-fit: cover;
-}
-
-.image-row td {
-    border: none;
-    padding: 0;
 }
