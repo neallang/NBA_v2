@@ -37,17 +37,13 @@
             <button id="toggle-info">View Personal Information</button>
         </div>
 
-        <div class="player-images">
-            <div class="player-image">
-                <img src="{{ player1_info.image_url }}" alt="{{ player1_info.full_name }}">
-            </div>
-            <div class="player-image">
-                <img src="{{ player2_info.image_url }}" alt="{{ player2_info.full_name }}">
-            </div>
-        </div>
-
         <!-- Personal Information Table -->
         <table id="personal-info-table" style="display:none;">
+            <tr class="image-row">
+                <td><img src="{{ player1_info.image_url }}" alt="{{ player1_info.full_name }}" class="player-image"></td>
+                <td></td>
+                <td><img src="{{ player2_info.image_url }}" alt="{{ player2_info.full_name }}" class="player-image"></td>
+            </tr>
             <tr>
                 <th>{{ player1_info.full_name }}</th>
                 <th>Info</th>
@@ -87,6 +83,11 @@
 
         <!-- Career Statistics Table -->
         <table id="career-stats-table">
+            <tr class="image-row">
+                <td><img src="{{ player1_info.image_url }}" alt="{{ player1_info.full_name }}" class="player-image"></td>
+                <td></td>
+                <td><img src="{{ player2_info.image_url }}" alt="{{ player2_info.full_name }}" class="player-image"></td>
+            </tr>
             <tr>
                 <th>{{ player1_info.full_name }}</th>
                 <th>Stat</th>
