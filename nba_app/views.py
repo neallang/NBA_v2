@@ -17,11 +17,11 @@ def get_player_stats(player_name):
         career_ppg = career_totals['PTS']
         career_apg = career_totals['AST']
         career_rpg = career_totals['REB']
-        career_bpg = career_totals['BLK']
-        career_spg = career_totals['STL']
-        career_fg_pct = career_totals['FG_PCT'] * 100
-        career_3p_pct = career_totals['FG3_PCT'] * 100
-        career_ft_pct = career_totals['FT_PCT'] * 100
+        career_bpg = career_totals['BLK'] if career_totals['BLK'] is not None else "N/A"
+        career_spg = career_totals['STL'] if career_totals['STL'] is not None else "N/A"
+        career_fg_pct = career_totals['FG_PCT'] * 100 if career_totals['FG_PCT'] is not None else "N/A"
+        career_3p_pct = career_totals['FG3_PCT'] * 100 if career_totals['FG3_PCT'] is not None else "N/A"
+        career_ft_pct = career_totals['FT_PCT'] * 100 if career_totals['FT_PCT'] is not None else "N/A"
         games_played = career_totals['GP']
 
         if games_played > 0:
@@ -34,11 +34,13 @@ def get_player_stats(player_name):
             career_rpg /= games_played
             career_rpg = round(career_rpg, 1)
 
-            career_bpg /= games_played
-            career_bpg = round(career_bpg, 1)
+            if career_bpg != "N/A":
+                career_bpg /= games_played
+                career_bpg = round(career_bpg, 1)
 
-            career_spg /= games_played
-            career_spg = round(career_spg, 1)
+            if career_spg != "N/A":
+                career_spg /= games_played
+                career_spg = round(career_spg, 1)
 
         return {
             'career_ppg': career_ppg,
@@ -46,9 +48,9 @@ def get_player_stats(player_name):
             'career_rpg': career_rpg,
             'career_bpg': career_bpg,
             'career_spg': career_spg,
-            'career_fg_pct': round(career_fg_pct, 1),
-            'career_3p_pct': round(career_3p_pct, 1),
-            'career_ft_pct': round(career_ft_pct, 1),
+            'career_fg_pct': round(career_fg_pct, 1) if career_fg_pct != "N/A" else "N/A",
+            'career_3p_pct': round(career_3p_pct, 1) if career_3p_pct != "N/A" else "N/A",
+            'career_ft_pct': round(career_ft_pct, 1) if career_ft_pct != "N/A" else "N/A",
         }
     return None
 
@@ -115,10 +117,13 @@ def compare_players(request):
         if form.is_valid():
             player1_name = form.cleaned_data['player1']
             player2_name = form.cleaned_data['player2']
-            player1_info = get_player_info(player1_name)
-            player2_info = get_player_info(player2_name)
-            player1_stats = get_player_stats(player1_name)
-            player2_stats = get_player_stats(player2_name)
+            if player1_name.lower() == player2_name.lower():
+                form.add_error(None, 'You cannot compare a player to themself. Please try again.')
+            else:
+                player1_info = get_player_info(player1_name)
+                player2_info = get_player_info(player2_name)
+                player1_stats = get_player_stats(player1_name)
+                player2_stats = get_player_stats(player2_name)
 
     context = {
         'form': form,
