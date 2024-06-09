@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <!-- Include the external JavaScript file -->
+    <script src="{% static 'js/autocomplete.js' %}"></script>
 </head>
 <body>
     <h1>Compare NBA Players</h1>
@@ -24,59 +26,104 @@
 
     {% if player1_info and player2_info %}
         <h2>
-            {{ player1_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }} vs
-            {{ player2_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}
+            {{ player1_info.full_name }} vs {{ player2_info.full_name }}
         </h2>
+        <h3>Personal Information</h3>
         <table>
             <tr>
-                <th>Stat (per game)</th>
-                <th>{{ player1_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
-                <th>{{ player2_info.player_info.CommonPlayerInfo.0.DISPLAY_FIRST_LAST }}</th>
+                <th>Info</th>
+                <th>{{ player1_info.full_name }}</th>
+                <th>{{ player2_info.full_name }}</th>
             </tr>
             <tr>
-                <td>Career PTS</td>
-                <td>{{ player1_info.career_ppg }}</td>
-                <td>{{ player2_info.career_ppg }}</td>
+                <td>Birth Date</td>
+                <td>{{ player1_info.birth_date }}</td>
+                <td>{{ player2_info.birth_date }}</td>
             </tr>
             <tr>
-                <td>Career AST</td>
-                <td>{{ player1_info.career_apg }}</td>
-                <td>{{ player2_info.career_apg }}</td>
+                <td>Height</td>
+                <td>{{ player1_info.height }}</td>
+                <td>{{ player2_info.height }}</td>
             </tr>
             <tr>
-                <td>Career REB</td>
-                <td>{{ player1_info.career_rpg }}</td>
-                <td>{{ player2_info.career_rpg }}</td>
+                <td>Weight</td>
+                <td>{{ player1_info.weight }}</td>
+                <td>{{ player2_info.weight }}</td>
+            </tr>
+            <tr>
+                <td>College</td>
+                <td>{{ player1_info.college }}</td>
+                <td>{{ player2_info.college }}</td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td>{{ player1_info.country }}</td>
+                <td>{{ player2_info.country }}</td>
+            </tr>
+            <tr>
+                <td>Draft Year</td>
+                <td>{{ player1_info.draft_year }}</td>
+                <td>{{ player2_info.draft_year }}</td>
+            </tr>
+            <tr>
+                <td>Draft Round</td>
+                <td>{{ player1_info.draft_round }}</td>
+                <td>{{ player2_info.draft_round }}</td>
+            </tr>
+            <tr>
+                <td>Draft Number</td>
+                <td>{{ player1_info.draft_number }}</td>
+                <td>{{ player2_info.draft_number }}</td>
+            </tr>
+        </table>
+        <h3>Career Statistics</h3>
+        <table>
+            <tr>
+                <th>Stat</th>
+                <th>{{ player1_info.full_name }}</th>
+                <th>{{ player2_info.full_name }}</th>
+            </tr>
+            <tr>
+                <td>Career PPG</td>
+                <td>{{ player1_stats.career_ppg }}</td>
+                <td>{{ player2_stats.career_ppg }}</td>
+            </tr>
+            <tr>
+                <td>Career APG</td>
+                <td>{{ player1_stats.career_apg }}</td>
+                <td>{{ player2_stats.career_apg }}</td>
+            </tr>
+            <tr>
+                <td>Career RPG</td>
+                <td>{{ player1_stats.career_rpg }}</td>
+                <td>{{ player2_stats.career_rpg }}</td>
+            </tr>
+            <tr>
+                <td>Career BPG</td>
+                <td>{{ player1_stats.career_bpg }}</td>
+                <td>{{ player2_stats.career_bpg }}</td>
+            </tr>
+            <tr>
+                <td>Career SPG</td>
+                <td>{{ player1_stats.career_spg }}</td>
+                <td>{{ player2_stats.career_spg }}</td>
+            </tr>
+            <tr>
+                <td>Career FG%</td>
+                <td>{{ player1_stats.career_fg_pct }}%</td>
+                <td>{{ player2_stats.career_fg_pct }}%</td>
+            </tr>
+            <tr>
+                <td>Career 3P%</td>
+                <td>{{ player1_stats.career_3p_pct }}%</td>
+                <td>{{ player2_stats.career_3p_pct }}%</td>
+            </tr>
+            <tr>
+                <td>Career FT%</td>
+                <td>{{ player1_stats.career_ft_pct }}%</td>
+                <td>{{ player2_stats.career_ft_pct }}%</td>
             </tr>
         </table>
     {% endif %}
-
-    <script>
-        $(document).ready(function() {
-            function setupAutocomplete(inputId) {
-                $(inputId).autocomplete({
-                    source: function(request, response) {
-                        $.ajax({
-                            url: "/",
-                            dataType: "json",
-                            data: {
-                                q: request.term
-                            },
-                            success: function(data) {
-                                response(data.map(player => player.full_name));
-                            }
-                        });
-                    },
-                    minLength: 2,
-                    select: function(event, ui) {
-                        $(inputId).val(ui.item.value);
-                    }
-                });
-            }
-
-            setupAutocomplete("#player1");
-            setupAutocomplete("#player2");
-        });
-    </script>
 </body>
 </html>
