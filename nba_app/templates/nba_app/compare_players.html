@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Compare NBA Players</title>
-    <!-- Include jQuery and jQuery UI -->
+    <!-- Include CSS files -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Include jQuery and jQuery UI -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <!-- Include the external JavaScript file -->
@@ -15,19 +17,18 @@
     <h1>Compare NBA Players</h1>
     <form method="post">
         {% csrf_token %}
-        <div class="autocomplete" style="width:300px;">
+        <div class="autocomplete">
             <input id="player1" type="text" name="player1" placeholder="Player 1">
         </div>
-        <div class="autocomplete" style="width:300px;">
+        <div class="autocomplete">
             <input id="player2" type="text" name="player2" placeholder="Player 2">
         </div>
         <button type="submit">Compare</button>
     </form>
 
     {% if player1_info and player2_info %}
-        <h2>
-            {{ player1_info.full_name }} vs {{ player2_info.full_name }}
-        </h2>
+        <h2>{{ player1_info.full_name }} vs {{ player2_info.full_name }}</h2>
+
         <h3>Personal Information</h3>
         <table>
             <tr>
@@ -66,6 +67,7 @@
                 <td>{{ player2_info.draft_info }}</td>
             </tr>
         </table>
+
         <h3>Career Statistics</h3>
         <table>
             <tr>
