@@ -1,3 +1,5 @@
+/* static/css/styles.css */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
@@ -13,6 +15,11 @@ h1 {
 form {
     text-align: center;
     margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center;
+    margin: 20px 0;
 }
 
 table {
@@ -47,6 +54,7 @@ button {
     border: none;
     padding: 10px 20px;
     cursor: pointer;
+    margin: 5px;
 }
 
 button:hover {
@@ -63,4 +71,9 @@ button:hover {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+}
+
+.toggle-buttons {
+    text-align: center;
+    margin-bottom: 20px;
 }

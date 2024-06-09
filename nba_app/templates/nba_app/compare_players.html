@@ -10,13 +10,15 @@
     <!-- Include jQuery and jQuery UI -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <!-- Include the external JavaScript file -->
+    <!-- Include the external JavaScript files -->
     <script src="{% static 'js/autocomplete.js' %}"></script>
+    <script src="{% static 'js/toggleTables.js' %}"></script>
 </head>
 <body>
     <h1>Compare NBA Players</h1>
     <form method="post">
         {% csrf_token %}
+        {{ form.non_field_errors }}
         <div class="autocomplete">
             <input id="player1" type="text" name="player1" placeholder="Player 1">
         </div>
@@ -29,91 +31,109 @@
     {% if player1_info and player2_info %}
         <h2>{{ player1_info.full_name }} vs {{ player2_info.full_name }}</h2>
 
-        <h3>Personal Information</h3>
-        <table>
+        <!-- Toggle Buttons -->
+        <div class="toggle-buttons">
+            <button id="toggle-stats">View Career Statistics</button>
+            <button id="toggle-info">View Personal Information</button>
+        </div>
+
+        <!-- Personal Information Table -->
+        <table id="personal-info-table" style="display:none;">
             <tr>
-                <th>Info</th>
                 <th>{{ player1_info.full_name }}</th>
+                <th>Info</th>
                 <th>{{ player2_info.full_name }}</th>
             </tr>
             <tr>
-                <td>Birth Date</td>
                 <td>{{ player1_info.birth_date }} (age: {{ player1_info.age }})</td>
+                <td>Birth Date</td>
                 <td>{{ player2_info.birth_date }} (age: {{ player2_info.age }})</td>
             </tr>
             <tr>
-                <td>Height</td>
                 <td>{{ player1_info.height }}</td>
+                <td>Height</td>
                 <td>{{ player2_info.height }}</td>
             </tr>
             <tr>
-                <td>Weight</td>
                 <td>{{ player1_info.weight }}</td>
+                <td>Weight</td>
                 <td>{{ player2_info.weight }}</td>
             </tr>
             <tr>
-                <td>College</td>
                 <td>{{ player1_info.college }}</td>
+                <td>College</td>
                 <td>{{ player2_info.college }}</td>
             </tr>
             <tr>
-                <td>Country</td>
                 <td>{{ player1_info.country }}</td>
+                <td>Country</td>
                 <td>{{ player2_info.country }}</td>
             </tr>
             <tr>
-                <td>Draft Info</td>
                 <td>{{ player1_info.draft_info }}</td>
+                <td>Draft Info</td>
                 <td>{{ player2_info.draft_info }}</td>
             </tr>
         </table>
 
-        <h3>Career Statistics</h3>
-        <table>
+        <!-- Career Statistics Table -->
+        <table id="career-stats-table">
             <tr>
-                <th>Stat</th>
                 <th>{{ player1_info.full_name }}</th>
+                <th>Stat</th>
                 <th>{{ player2_info.full_name }}</th>
             </tr>
             <tr>
-                <td>Career PPG</td>
                 <td>{{ player1_stats.career_ppg }}</td>
+                <td>Career PPG</td>
                 <td>{{ player2_stats.career_ppg }}</td>
             </tr>
             <tr>
-                <td>Career APG</td>
                 <td>{{ player1_stats.career_apg }}</td>
+                <td>Career APG</td>
                 <td>{{ player2_stats.career_apg }}</td>
             </tr>
             <tr>
-                <td>Career RPG</td>
                 <td>{{ player1_stats.career_rpg }}</td>
+                <td>Career RPG</td>
                 <td>{{ player2_stats.career_rpg }}</td>
             </tr>
             <tr>
-                <td>Career BPG</td>
                 <td>{{ player1_stats.career_bpg }}</td>
+                <td>Career BPG</td>
                 <td>{{ player2_stats.career_bpg }}</td>
             </tr>
             <tr>
-                <td>Career SPG</td>
                 <td>{{ player1_stats.career_spg }}</td>
+                <td>Career SPG</td>
                 <td>{{ player2_stats.career_spg }}</td>
             </tr>
             <tr>
+                <td>
+                    {{ player1_stats.career_fg_pct }}{% if player1_stats.career_fg_pct != "N/A" %}%{% endif %}
+                </td>
                 <td>Career FG%</td>
-                <td>{{ player1_stats.career_fg_pct }}%</td>
-                <td>{{ player2_stats.career_fg_pct }}%</td>
+                <td>
+                    {{ player2_stats.career_fg_pct }}{% if player2_stats.career_fg_pct != "N/A" %}%{% endif %}
+                </td>
             </tr>
             <tr>
+                <td>
+                    {{ player1_stats.career_3p_pct }}{% if player1_stats.career_3p_pct != "N/A" %}%{% endif %}
+                </td>
                 <td>Career 3P%</td>
-                <td>{{ player1_stats.career_3p_pct }}%</td>
-                <td>{{ player2_stats.career_3p_pct }}%</td>
+                <td>
+                    {{ player2_stats.career_3p_pct }}{% if player2_stats.career_3p_pct != "N/A" %}%{% endif %}
+                </td>
             </tr>
             <tr>
+                <td>
+                    {{ player1_stats.career_ft_pct }}{% if player1_stats.career_ft_pct != "N/A" %}%{% endif %}
+                </td>
                 <td>Career FT%</td>
-                <td>{{ player1_stats.career_ft_pct }}%</td>
-                <td>{{ player2_stats.career_ft_pct }}%</td>
+                <td>
+                    {{ player2_stats.career_ft_pct }}{% if player2_stats.career_ft_pct != "N/A" %}%{% endif %}
+                </td>
             </tr>
         </table>
     {% endif %}
