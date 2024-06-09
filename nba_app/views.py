@@ -88,6 +88,12 @@ def get_player_info(player_name):
         else:
             draft_info = "Undrafted"
 
+        # Construct the image URL
+        player_id = common_info['PERSON_ID']
+        image_url = f"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/{player_id}.png"
+
+
+
         return {
             'full_name': common_info['DISPLAY_FIRST_LAST'],
             'birth_date': formatted_birth_date,
@@ -97,9 +103,9 @@ def get_player_info(player_name):
             'college': common_info['SCHOOL'],
             'country': common_info['COUNTRY'],
             'draft_info': draft_info,
+            'image_url': image_url,
         }
     return None
-
 # View function to handle player comparison
 def compare_players(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # check if we have an ajax request
