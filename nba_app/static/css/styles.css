@@ -1,3 +1,5 @@
+/* static/css/styles.css */
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
@@ -21,14 +23,14 @@ h2 {
 }
 
 table {
-    width: 60%;
+    width: 50%;
     margin: 0 auto 20px auto;
     border-collapse: collapse;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
 #career-stats-table {
-    width: 40%;
+    width: 50%;
 }
 
 th, td {
@@ -78,4 +80,18 @@ button:hover {
 .toggle-buttons {
     text-align: center;
     margin-bottom: 20px;
+}
+
+.player-images {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.player-image img {
+    width: 130px;
+    height: 190px;
+    object-fit: cover;
 }
