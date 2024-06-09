@@ -3,8 +3,9 @@ from django.http import JsonResponse
 from .forms import PlayerSearchForm
 from nba_api.stats.static import players
 from nba_api.stats.endpoints import commonplayerinfo, playercareerstats
+from datetime import datetime
 
-# retrieves the corresponding statistics for a given player
+# Function to retrieve the corresponding statistics for a given player
 def get_player_stats(player_name):
     player_dict = players.get_players()
     player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
@@ -51,7 +52,18 @@ def get_player_stats(player_name):
         }
     return None
 
-# retrieves the corresponding personal information for a given player
+# Function to format ordinal numbers (1st, 2nd, 3rd)
+def ordinal(n):
+    if n == "Undrafted":
+        return ""
+    n = int(n)
+    if 11 <= (n % 100) <= 13:
+        suffix = 'th'
+    else:
+        suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+    return str(n) + suffix
+
+# Function to retrieve the corresponding personal information for a given player
 def get_player_info(player_name):
     player_dict = players.get_players()
     player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
@@ -59,20 +71,34 @@ def get_player_info(player_name):
         player_info = commonplayerinfo.CommonPlayerInfo(player_id=player['id']).get_normalized_dict()
         common_info = player_info['CommonPlayerInfo'][0]
 
+        birth_date = common_info['BIRTHDATE']
+        birth_date_obj = datetime.strptime(birth_date, '%Y-%m-%dT%H:%M:%S')
+        formatted_birth_date = birth_date_obj.strftime('%B %d, %Y')
+        age = (datetime.now() - birth_date_obj).days // 365
+
+        draft_year = common_info.get('DRAFT_YEAR')
+        draft_round = common_info.get('DRAFT_ROUND')
+        draft_number = common_info.get('DRAFT_NUMBER')
+
+        if draft_year and draft_round and draft_number and draft_round != "Undrafted":
+            draft_team = f"{common_info['TEAM_CITY']} {common_info['TEAM_NAME']}" if common_info['TEAM_CITY'] and common_info['TEAM_NAME'] else 'Unknown Team'
+            draft_info = f" {draft_year}, {draft_team} ({ordinal(draft_round)} round: {ordinal(draft_number)} pick)"
+        else:
+            draft_info = "Undrafted"
+
         return {
             'full_name': common_info['DISPLAY_FIRST_LAST'],
-            'birth_date': common_info['BIRTHDATE'],
+            'birth_date': formatted_birth_date,
+            'age': age,
             'height': common_info['HEIGHT'],
             'weight': common_info['WEIGHT'],
             'college': common_info['SCHOOL'],
             'country': common_info['COUNTRY'],
-            'draft_year': common_info['DRAFT_YEAR'],
-            'draft_round': common_info['DRAFT_ROUND'],
-            'draft_number': common_info['DRAFT_NUMBER'],
+            'draft_info': draft_info,
         }
     return None
 
-# calls other functions to retrieve information and passes to template
+# View function to handle player comparison
 def compare_players(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # check if we have an ajax request
         query = request.GET.get('q', '')
