@@ -1,0 +1,39 @@
+{% if player1_info and player2_info %}
+<table id="personal-info-table" style="display:none;">
+    <tr>
+        <th colspan="3">Info</th>
+    </tr>
+    <tr>
+    </tr>
+    <tr>
+        <td>{{ player1_info.birth_date }} (age: {{ player1_info.age }})</td>
+        <td>Birth Date</td>
+        <td>{{ player2_info.birth_date }} (age: {{ player2_info.age }})</td>
+    </tr>
+    <tr>
+        <td>{{ player1_info.height }}</td>
+        <td>Height</td>
+        <td>{{ player2_info.height }}</td>
+    </tr>
+    <tr>
+        <td>{{ player1_info.weight }}</td>
+        <td>Weight</td>
+        <td>{{ player2_info.weight }}</td>
+    </tr>
+    <tr>
+        <td>{{ player1_info.college }}</td>
+        <td>College</td>
+        <td>{{ player2_info.college }}</td>
+    </tr>
+    <tr>
+        <td>{{ player1_info.country }}</td>
+        <td>Country</td>
+        <td>{{ player2_info.country }}</td>
+    </tr>
+    <tr>
+        <td>{{ player1_info.draft_info|linebreaksbr }}</td>
+        <td>Draft Info</td>
+        <td>{{ player2_info.draft_info|linebreaksbr }}</td>
+    </tr>
+</table>
+{% endif %}

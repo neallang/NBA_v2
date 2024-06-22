@@ -51,6 +51,7 @@ def get_player_stats(player_name):
             'career_fg_pct': round(career_fg_pct, 1) if career_fg_pct != "N/A" else "N/A",
             'career_3p_pct': round(career_3p_pct, 1) if career_3p_pct != "N/A" else "N/A",
             'career_ft_pct': round(career_ft_pct, 1) if career_ft_pct != "N/A" else "N/A",
+            'games_played': games_played
         }
     return None
 
@@ -84,7 +85,7 @@ def get_player_info(player_name):
 
         if draft_year and draft_round and draft_number and draft_round != "Undrafted":
             draft_team = f"{common_info['TEAM_CITY']} {common_info['TEAM_NAME']}" if common_info['TEAM_CITY'] and common_info['TEAM_NAME'] else 'Unknown Team'
-            draft_info = f" {draft_year}, {draft_team} ({ordinal(draft_round)} round: {ordinal(draft_number)} pick)"
+            draft_info = f" {draft_year}, {draft_team}\n({ordinal(draft_round)} round: {ordinal(draft_number)} pick)"
         else:
             draft_info = "Undrafted"
 
