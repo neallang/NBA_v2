@@ -1,0 +1,64 @@
+{% if player1_info and player2_info %}
+<table id="career-stats-table">
+    <tr>
+        <th colspan="3">Career Statistics</th>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.games_played > player2_stats.games_played %}highlight-cell{% elif player2_stats.games_played == 'N/A' and player1_stats.games_played != 'N/A' %}highlight-cell{% endif %}">{{ player1_stats.games_played }}</td>
+        <td>Games Played</td>
+        <td class="{% if player2_stats.games_played > player1_stats.games_played %}highlight-cell{% elif player1_stats.games_played == 'N/A' and player2_stats.games_played != 'N/A' %}highlight-cell{% endif %}">{{ player2_stats.games_played }}</td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_ppg > player2_stats.career_ppg %}highlight-cell{% elif player2_stats.career_ppg == 'N/A' and player1_stats.career_ppg != 'N/A' %}highlight-cell{% endif %}">{{ player1_stats.career_ppg }}</td>
+        <td>Career PPG</td>
+        <td class="{% if player2_stats.career_ppg > player1_stats.career_ppg %}highlight-cell{% elif player1_stats.career_ppg == 'N/A' and player2_stats.career_ppg != 'N/A' %}highlight-cell{% endif %}">{{ player2_stats.career_ppg }}</td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_apg > player2_stats.career_apg %}highlight-cell{% elif player2_stats.career_apg == 'N/A' and player1_stats.career_apg != 'N/A' %}highlight-cell{% endif %}">{{ player1_stats.career_apg }}</td>
+        <td>Career APG</td>
+        <td class="{% if player2_stats.career_apg > player1_stats.career_apg %}highlight-cell{% elif player1_stats.career_apg == 'N/A' and player2_stats.career_apg != 'N/A' %}highlight-cell{% endif %}">{{ player2_stats.career_apg }}</td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_rpg > player2_stats.career_rpg %}highlight-cell{% elif player2_stats.career_rpg == 'N/A' and player1_stats.career_rpg != 'N/A' %}highlight-cell{% endif %}">{{ player1_stats.career_rpg }}</td>
+        <td>Career RPG</td>
+        <td class="{% if player2_stats.career_rpg > player1_stats.career_rpg %}highlight-cell{% elif player1_stats.career_rpg == 'N/A' and player2_stats.career_rpg != 'N/A' %}highlight-cell{% endif %}">{{ player2_stats.career_rpg }}</td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_bpg > player2_stats.career_bpg %}highlight-cell{% elif player2_stats.career_bpg == 'N/A' and player1_stats.career_bpg != 'N/A' %}highlight-cell{% endif %}">{{ player1_stats.career_bpg }}</td>
+        <td>Career BPG</td>
+        <td class="{% if player2_stats.career_bpg > player1_stats.career_bpg %}highlight-cell{% elif player1_stats.career_bpg == 'N/A' and player2_stats.career_bpg != 'N/A' %}highlight-cell{% endif %}">{{ player2_stats.career_bpg }}</td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_spg > player2_stats.career_spg %}highlight-cell{% elif player2_stats.career_spg == 'N/A' and player1_stats.career_spg != 'N/A' %}highlight-cell{% endif %}">{{ player1_stats.career_spg }}</td>
+        <td>Career SPG</td>
+        <td class="{% if player2_stats.career_spg > player1_stats.career_spg %}highlight-cell{% elif player1_stats.career_spg == 'N/A' and player2_stats.career_spg != 'N/A' %}highlight-cell{% endif %}">{{ player2_stats.career_spg }}</td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_fg_pct > player2_stats.career_fg_pct %}highlight-cell{% elif player2_stats.career_fg_pct == 'N/A' and player1_stats.career_fg_pct != 'N/A' %}highlight-cell{% endif %}">
+            {{ player1_stats.career_fg_pct }}{% if player1_stats.career_fg_pct != "N/A" %}%{% endif %}
+        </td>
+        <td>Career FG%</td>
+        <td class="{% if player2_stats.career_fg_pct > player1_stats.career_fg_pct %}highlight-cell{% elif player1_stats.career_fg_pct == 'N/A' and player2_stats.career_fg_pct != 'N/A' %}highlight-cell{% endif %}">
+            {{ player2_stats.career_fg_pct }}{% if player2_stats.career_fg_pct != "N/A" %}%{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_3p_pct > player2_stats.career_3p_pct %}highlight-cell{% elif player2_stats.career_3p_pct == 'N/A' and player1_stats.career_3p_pct != 'N/A' %}highlight-cell{% endif %}">
+            {{ player1_stats.career_3p_pct }}{% if player1_stats.career_3p_pct != "N/A" %}%{% endif %}
+        </td>
+        <td>Career 3P%</td>
+        <td class="{% if player2_stats.career_3p_pct > player1_stats.career_3p_pct %}highlight-cell{% elif player1_stats.career_3p_pct == 'N/A' and player2_stats.career_3p_pct != 'N/A' %}highlight-cell{% endif %}">
+            {{ player2_stats.career_3p_pct }}{% if player2_stats.career_3p_pct != "N/A" %}%{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td class="{% if player1_stats.career_ft_pct > player2_stats.career_ft_pct %}highlight-cell{% elif player2_stats.career_ft_pct == 'N/A' and player1_stats.career_ft_pct != 'N/A' %}highlight-cell{% endif %}">
+            {{ player1_stats.career_ft_pct }}{% if player1_stats.career_ft_pct != "N/A" %}%{% endif %}
+        </td>
+        <td>Career FT%</td>
+        <td class="{% if player2_stats.career_ft_pct > player1_stats.career_ft_pct %}highlight-cell{% elif player1_stats.career_ft_pct == 'N/A' and player2_stats.career_ft_pct != 'N/A' %}highlight-cell{% endif %}">
+            {{ player2_stats.career_ft_pct }}{% if player2_stats.career_ft_pct != "N/A" %}%{% endif %}
+        </td>
+    </tr>
+</table>
+{% endif %}
