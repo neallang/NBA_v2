@@ -4,7 +4,8 @@ from .forms import PlayerSearchForm
 from nba_api.stats.static import players
 from nba_api.stats.endpoints import commonplayerinfo, playercareerstats, playerawards
 from datetime import datetime
-from .utils.top_75 import TOP_75_PLAYERS
+from .utils.top_75 import is_top_75
+from .utils.hof_since_19 import is_hall_of_famer
 
 # Function to retrieve the corresponding statistics for a given player
 def get_player_stats(player_name):
@@ -118,8 +119,8 @@ def get_player_awards(player_name):
         awards_response = playerawards.PlayerAwards(player_id=player_id).get_normalized_dict()
         
         awards = {
-            'Hall_of_Fame': 'False',
-            'Top_75': 'False', 
+            'Hall_of_Fame': 'True' if is_hall_of_famer(player_name) else 'False',   # need this for players 2019-present. older HOF will be handled by API.
+            'Top_75': 'True' if is_top_75(player_name) else 'False', 
             'Championships': 0,
             'All_NBA': 0,
             'All_Star': 0,
@@ -154,7 +155,6 @@ def get_player_awards(player_name):
                     awards['ROTY'] = 'True'
                 elif description == 'NBA All-Star Most Valuable Player':
                     awards['All_Star_MVP'] += 1
-            awards['Top_75'] = TOP_75_PLAYERS.get(player_name, 'False')
         
         return awards
     return None
