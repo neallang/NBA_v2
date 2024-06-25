@@ -1,0 +1,54 @@
+{% if player1_awards and player2_awards %}
+<table id="awards-table">
+    <tr>
+        <th>Award</th>
+        <th>{{ player1_info.full_name }}</th>
+        <th>{{ player2_info.full_name }}</th>
+    </tr>
+    <tr>
+        <td>Hall of Fame</td>
+        <td>{{ player1_awards.Hall_of_Fame }}</td>
+        <td>{{ player2_awards.Hall_of_Fame }}</td>
+    </tr>
+    <tr>
+        <td>Championships</td>
+        <td>{{ player1_awards.Championships }}</td>
+        <td>{{ player2_awards.Championships }}</td>
+    </tr>
+    <tr>
+        <td>All-NBA</td>
+        <td>{{ player1_awards.All_NBA }}</td>
+        <td>{{ player2_awards.All_NBA }}</td>
+    </tr>
+    <tr>
+        <td>All-Star</td>
+        <td>{{ player1_awards.All_Star }}</td>
+        <td>{{ player2_awards.All_Star }}</td>
+    </tr>
+    <tr>
+        <td>MVP</td>
+        <td>{{ player1_awards.MVP }}</td>
+        <td>{{ player2_awards.MVP }}</td>
+    </tr>
+    <tr>
+        <td>Finals MVP</td>
+        <td>{{ player1_awards.Finals_MVP }}</td>
+        <td>{{ player2_awards.Finals_MVP }}</td>
+    </tr>
+    <tr>
+        <td>DPOY</td>
+        <td>{{ player1_awards.DPOY }}</td>
+        <td>{{ player2_awards.DPOY }}</td>
+    </tr>
+    <tr>
+        <td>All-NBA Defense</td>
+        <td>{{ player1_awards.All_NBA_Defense }}</td>
+        <td>{{ player2_awards.All_NBA_Defense }}</td>
+    </tr>
+    <tr>
+        <td>ROTY</td>
+        <td>{{ player1_awards.ROTY }}</td>
+        <td>{{ player2_awards.ROTY }}</td>
+    </tr>
+</table>
+{% endif %}
