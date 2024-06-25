@@ -131,6 +131,8 @@ def get_player_awards(player_name):
             'ROTY': 'False',
             'All_Star_MVP' : 0,
         }
+
+
         
         if 'PlayerAwards' in awards_response:
             for award in awards_response['PlayerAwards']:
@@ -155,6 +157,9 @@ def get_player_awards(player_name):
                     awards['ROTY'] = 'True'
                 elif description == 'NBA All-Star Most Valuable Player':
                     awards['All_Star_MVP'] += 1
+
+        if player_name.lower() == 'kobe bryant':    # unfortunate but unavoidable edge case. the API is incorrect for some reason regarding his MVPs
+            awards['MVP'] = 4
         
         return awards
     return None
