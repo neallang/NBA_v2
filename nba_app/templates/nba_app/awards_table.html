@@ -4,59 +4,59 @@
         <th colspan="3">Awards</th>
     </tr>
     <tr>
+        <td class="{% if player1_awards.Hall_of_Fame == 'True' and player2_awards.Hall_of_Fame == 'False' %}highlight-cell{% elif player1_awards.Hall_of_Fame == 'True' and player2_awards.Hall_of_Fame == 'True' %}highlight-cell{% endif %}">{{ player1_awards.Hall_of_Fame }}</td>
         <td>Hall of Fame</td>
-        <td>{{ player1_awards.Hall_of_Fame }}</td>
-        <td>{{ player2_awards.Hall_of_Fame }}</td>
+        <td class="{% if player2_awards.Hall_of_Fame == 'True' and player1_awards.Hall_of_Fame == 'False' %}highlight-cell{% elif player2_awards.Hall_of_Fame == 'True' and player1_awards.Hall_of_Fame == 'True' %}highlight-cell{% endif %}">{{ player2_awards.Hall_of_Fame }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.Top_75 == 'True' and player2_awards.Top_75 == 'False' %}highlight-cell{% elif player1_awards.Top_75 == 'True' and player2_awards.Top_75 == 'True' %}highlight-cell{% endif %}">{{ player1_awards.Top_75 }}</td>
         <td>Top 75</td>
-        <td>{{ player1_awards.Top_75 }}</td>
-        <td>{{ player2_awards.Top_75 }}</td>
+        <td class="{% if player2_awards.Top_75 == 'True' and player1_awards.Top_75 == 'False' %}highlight-cell{% elif player2_awards.Top_75 == 'True' and player1_awards.Top_75 == 'True' %}highlight-cell{% endif %}">{{ player2_awards.Top_75 }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.MVP > player2_awards.MVP %}highlight-cell{% elif player1_awards.MVP == player2_awards.MVP and player1_awards.MVP != 0 %}highlight-cell{% endif %}">{{ player1_awards.MVP }}</td>
         <td>MVP</td>
-        <td>{{ player1_awards.MVP }}</td>
-        <td>{{ player2_awards.MVP }}</td>
+        <td class="{% if player2_awards.MVP > player1_awards.MVP %}highlight-cell{% elif player2_awards.MVP == player1_awards.MVP and player2_awards.MVP != 0 %}highlight-cell{% endif %}">{{ player2_awards.MVP }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.DPOY > player2_awards.DPOY %}highlight-cell{% elif player1_awards.DPOY == player2_awards.DPOY and player1_awards.DPOY != 0 %}highlight-cell{% endif %}">{{ player1_awards.DPOY }}</td>
         <td>DPOY</td>
-        <td>{{ player1_awards.DPOY }}</td>
-        <td>{{ player2_awards.DPOY }}</td>
+        <td class="{% if player2_awards.DPOY > player1_awards.DPOY %}highlight-cell{% elif player2_awards.DPOY == player1_awards.DPOY and player2_awards.DPOY != 0 %}highlight-cell{% endif %}">{{ player2_awards.DPOY }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.Championships > player2_awards.Championships %}highlight-cell{% elif player1_awards.Championships == player2_awards.Championships and player1_awards.Championships != 0 %}highlight-cell{% endif %}">{{ player1_awards.Championships }}</td>
         <td>Championships</td>
-        <td>{{ player1_awards.Championships }}</td>
-        <td>{{ player2_awards.Championships }}</td>
+        <td class="{% if player2_awards.Championships > player1_awards.Championships %}highlight-cell{% elif player2_awards.Championships == player1_awards.Championships and player2_awards.Championships != 0 %}highlight-cell{% endif %}">{{ player2_awards.Championships }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.Finals_MVP > player2_awards.Finals_MVP %}highlight-cell{% elif player1_awards.Finals_MVP == player2_awards.Finals_MVP and player1_awards.Finals_MVP != 0 %}highlight-cell{% endif %}">{{ player1_awards.Finals_MVP }}</td>
         <td>Finals MVP</td>
-        <td>{{ player1_awards.Finals_MVP }}</td>
-        <td>{{ player2_awards.Finals_MVP }}</td>
+        <td class="{% if player2_awards.Finals_MVP > player1_awards.Finals_MVP %}highlight-cell{% elif player2_awards.Finals_MVP == player1_awards.Finals_MVP and player2_awards.Finals_MVP != 0 %}highlight-cell{% endif %}">{{ player2_awards.Finals_MVP }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.ROTY == 'True' %}highlight-cell{% endif %}">{{ player1_awards.ROTY }}</td>
         <td>ROTY</td>
-        <td>{{ player1_awards.ROTY }}</td>
-        <td>{{ player2_awards.ROTY }}</td>
+        <td class="{% if player2_awards.ROTY == 'True' %}highlight-cell{% endif %}">{{ player2_awards.ROTY }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.All_NBA > player2_awards.All_NBA %}highlight-cell{% elif player1_awards.All_NBA == player2_awards.All_NBA and player1_awards.All_NBA != 0 %}highlight-cell{% endif %}">{{ player1_awards.All_NBA }}</td>
         <td>All-NBA</td>
-        <td>{{ player1_awards.All_NBA }}</td>
-        <td>{{ player2_awards.All_NBA }}</td>
+        <td class="{% if player2_awards.All_NBA > player1_awards.All_NBA %}highlight-cell{% elif player2_awards.All_NBA == player1_awards.All_NBA and player2_awards.All_NBA != 0 %}highlight-cell{% endif %}">{{ player2_awards.All_NBA }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.All_NBA_Defense > player2_awards.All_NBA_Defense %}highlight-cell{% elif player1_awards.All_NBA_Defense == player2_awards.All_NBA_Defense and player1_awards.All_NBA_Defense != 0 %}highlight-cell{% endif %}">{{ player1_awards.All_NBA_Defense }}</td>
         <td>All-NBA Defense</td>
-        <td>{{ player1_awards.All_NBA_Defense }}</td>
-        <td>{{ player2_awards.All_NBA_Defense }}</td>
+        <td class="{% if player2_awards.All_NBA_Defense > player1_awards.All_NBA_Defense %}highlight-cell{% elif player2_awards.All_NBA_Defense == player1_awards.All_NBA_Defense and player2_awards.All_NBA_Defense != 0 %}highlight-cell{% endif %}">{{ player2_awards.All_NBA_Defense }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.All_Star > player2_awards.All_Star %}highlight-cell{% elif player1_awards.All_Star == player2_awards.All_Star and player1_awards.All_Star != 0 %}highlight-cell{% endif %}">{{ player1_awards.All_Star }}</td>
         <td>All-Star</td>
-        <td>{{ player1_awards.All_Star }}</td>
-        <td>{{ player2_awards.All_Star }}</td>
+        <td class="{% if player2_awards.All_Star > player1_awards.All_Star %}highlight-cell{% elif player2_awards.All_Star == player1_awards.All_Star and player2_awards.All_Star != 0 %}highlight-cell{% endif %}">{{ player2_awards.All_Star }}</td>
     </tr>
     <tr>
+        <td class="{% if player1_awards.All_Star_MVP > player2_awards.All_Star_MVP %}highlight-cell{% elif player1_awards.All_Star_MVP == player2_awards.All_Star_MVP and player1_awards.All_Star_MVP != 0 %}highlight-cell{% endif %}">{{ player1_awards.All_Star_MVP }}</td>
         <td>All-Star MVP</td>
-        <td>{{ player1_awards.All_Star_MVP }}</td>
-        <td>{{ player2_awards.All_Star_MVP }}</td>
+        <td class="{% if player2_awards.All_Star_MVP > player1_awards.All_Star_MVP %}highlight-cell{% elif player2_awards.All_Star_MVP == player1_awards.All_Star_MVP and player2_awards.All_Star_MVP != 0 %}highlight-cell{% endif %}">{{ player2_awards.All_Star_MVP }}</td>
     </tr>
 </table>
 {% endif %}
