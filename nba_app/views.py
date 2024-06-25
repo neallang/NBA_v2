@@ -4,6 +4,7 @@ from .forms import PlayerSearchForm
 from nba_api.stats.static import players
 from nba_api.stats.endpoints import commonplayerinfo, playercareerstats, playerawards
 from datetime import datetime
+from .utils.top_75 import TOP_75_PLAYERS
 
 # Function to retrieve the corresponding statistics for a given player
 def get_player_stats(player_name):
@@ -119,6 +120,7 @@ def get_player_awards(player_name):
         
         awards = {
             'Hall_of_Fame': False,
+            'Top_75': False, 
             'Championships': 0,
             'All_NBA': 0,
             'All_Star': 0,
@@ -153,6 +155,7 @@ def get_player_awards(player_name):
                     awards['ROTY'] = 1
                 elif description == 'NBA All-Star Most Valuable Player':
                     awards['All_Star_MVP'] += 1
+            awards['Top_75'] = TOP_75_PLAYERS.get(player_name, False)
         
         return awards
     return None
@@ -196,3 +199,5 @@ def compare_players(request):
         'player2_awards': player2_awards
     }
     return render(request, 'nba_app/compare_players.html', context)
+
+
