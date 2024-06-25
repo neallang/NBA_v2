@@ -116,11 +116,10 @@ def get_player_awards(player_name):
     if player:
         player_id = player['id']
         awards_response = playerawards.PlayerAwards(player_id=player_id).get_normalized_dict()
-        print(awards_response)
         
         awards = {
-            'Hall_of_Fame': False,
-            'Top_75': False, 
+            'Hall_of_Fame': 'False',
+            'Top_75': 'False', 
             'Championships': 0,
             'All_NBA': 0,
             'All_Star': 0,
@@ -128,7 +127,7 @@ def get_player_awards(player_name):
             'Finals_MVP': 0,
             'DPOY': 0,
             'All_NBA_Defense': 0,
-            'ROTY': 0,
+            'ROTY': 'False',
             'All_Star_MVP' : 0,
         }
         
@@ -136,7 +135,7 @@ def get_player_awards(player_name):
             for award in awards_response['PlayerAwards']:
                 description = award.get('DESCRIPTION', '')
                 if description == 'Hall of Fame Inductee':
-                    awards['Hall_of_Fame'] = True
+                    awards['Hall_of_Fame'] = 'True'
                 elif description == 'NBA Champion':
                     awards['Championships'] += 1
                 elif description == 'All-NBA':
@@ -152,10 +151,10 @@ def get_player_awards(player_name):
                 elif description == 'All-Defensive Team':
                     awards['All_NBA_Defense'] += 1
                 elif description == 'NBA Rookie of the Year':
-                    awards['ROTY'] = 1
+                    awards['ROTY'] = 'True'
                 elif description == 'NBA All-Star Most Valuable Player':
                     awards['All_Star_MVP'] += 1
-            awards['Top_75'] = TOP_75_PLAYERS.get(player_name, False)
+            awards['Top_75'] = TOP_75_PLAYERS.get(player_name, 'False')
         
         return awards
     return None
