@@ -76,3 +76,6 @@ TOP_75_PLAYERS = {
     "Dominique Wilkins": 'True',
     "James Worthy": 'True',
 }
+
+def is_top_75(player_name):
+    return TOP_75_PLAYERS.get(player_name, False)
