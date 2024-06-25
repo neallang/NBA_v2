@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .forms import PlayerSearchForm
 from nba_api.stats.static import players
-from nba_api.stats.endpoints import commonplayerinfo, playercareerstats
+from nba_api.stats.endpoints import commonplayerinfo, playercareerstats, playerawards
 from datetime import datetime
 
 # Function to retrieve the corresponding statistics for a given player
@@ -107,6 +107,52 @@ def get_player_info(player_name):
             'image_url': image_url,
         }
     return None
+
+# Function to retrieve player awards
+def get_player_awards(player_name):
+    player_dict = players.get_players()
+    player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
+    
+    if player:
+        player_id = player['id']
+        awards_data = playerawards.PlayerAwards(player_id=player_id).get_normalized_dict()
+        awards = {
+            'Hall of Fame': 'N/A',
+            'Championships': 0,
+            'All-NBA': 0,
+            'All-Star': 0,
+            'MVP': 0,
+            'Finals MVP': 0,
+            'DPOY': 0,
+            'All-NBA Defense': 0,
+            'ROTY': 0
+        }
+        
+        if 'PlayerAwards' in awards_data and awards_data['PlayerAwards']:
+            for award in awards_data['PlayerAwards']:
+                description = award.get('DESCRIPTION', '')
+                if description == 'Hall of Fame Inductee':
+                    awards['Hall of Fame'] = 'T'
+                elif 'NBA Champion' in description:
+                    awards['Championships'] += 1
+                elif 'All-NBA' in description:
+                    awards['All-NBA'] += 1
+                elif 'All-Star' in description:
+                    awards['All-Star'] += 1
+                elif 'Most Valuable Player' in description:
+                    awards['MVP'] += 1
+                elif 'Finals MVP' in description:
+                    awards['Finals MVP'] += 1
+                elif 'Defensive Player of the Year' in description:
+                    awards['DPOY'] += 1
+                elif 'All-Defensive Team' in description:
+                    awards['All-NBA Defense'] += 1
+                elif 'Rookie of the Year' in description:
+                    awards['ROTY'] += 1
+
+        return awards
+    return None
+
 # View function to handle player comparison
 def compare_players(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # check if we have an ajax request
@@ -118,6 +164,7 @@ def compare_players(request):
     form = PlayerSearchForm()
     player1_info = player2_info = None
     player1_stats = player2_stats = None
+    player1_awards = player2_awards = None
 
     if request.method == 'POST':
         form = PlayerSearchForm(request.POST)
@@ -125,12 +172,14 @@ def compare_players(request):
             player1_name = form.cleaned_data['player1']
             player2_name = form.cleaned_data['player2']
             if player1_name.lower() == player2_name.lower():
-                form.add_error(None, 'You cannot compare a player to themself. Please try again.')
+                form.add_error(None, "You cannot compare a player to themselves.")
             else:
                 player1_info = get_player_info(player1_name)
                 player2_info = get_player_info(player2_name)
                 player1_stats = get_player_stats(player1_name)
                 player2_stats = get_player_stats(player2_name)
+                player1_awards = get_player_awards(player1_name)
+                player2_awards = get_player_awards(player2_name)
 
     context = {
         'form': form,
@@ -138,5 +187,7 @@ def compare_players(request):
         'player2_info': player2_info,
         'player1_stats': player1_stats,
         'player2_stats': player2_stats,
+        'player1_awards': player1_awards,
+        'player2_awards': player2_awards
     }
     return render(request, 'nba_app/compare_players.html', context)

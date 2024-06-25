@@ -37,6 +37,7 @@
         <div class="toggle-buttons">
             <button id="toggle-stats">View Career Statistics</button>
             <button id="toggle-info">View Personal Information</button>
+            <button id="toggle-awards">View Awards</button>
         </div>
 
         <!-- Player Images -->
@@ -56,6 +57,8 @@
 
         <!-- Include Career Statistics Table -->
         {% include 'nba_app/career_stats_table.html' %}
+
+        {% include 'nba_app/awards_table.html' %}
     {% endif %}
 </body>
 </html>
