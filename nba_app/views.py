@@ -6,6 +6,7 @@ from nba_api.stats.endpoints import commonplayerinfo, playercareerstats, playera
 from datetime import datetime
 from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
+from .utils.scoring_titles import get_scoring_titles
 
 # Function to retrieve the corresponding statistics for a given player
 def get_player_stats(player_name):
@@ -121,6 +122,7 @@ def get_player_awards(player_name):
         awards = {
             'Hall_of_Fame': 'True' if is_hall_of_famer(player_name) else 'False',   # need this for players 2019-present. older HOF will be handled by API.
             'Top_75': 'True' if is_top_75(player_name) else 'False', 
+            'Scoring_Titles': get_scoring_titles(player_name),
             'Championships': 0,
             'All_NBA': 0,
             'All_Star': 0,

@@ -1,3 +1,4 @@
+# API does not contain this data
 TOP_75_PLAYERS = {
     "Kareem Abdul-Jabbar": 'True',
     "Ray Allen": 'True',

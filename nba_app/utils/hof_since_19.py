@@ -1,3 +1,4 @@
+# API not updated since 2019 (HOF only)
 hall_of_fame = {
     "2019": ["Vlade Divac", "Sidney Moncrief", "Jack Sikma", "Paul Westphal", "Bobby Jones", "Carl Braun", "Chuck Cooper"],
     "2020": ["Kobe Bryant", "Tim Duncan", "Kevin Garnett", "Rudy Tomjanovich"],
