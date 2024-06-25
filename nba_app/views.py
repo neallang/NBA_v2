@@ -112,46 +112,51 @@ def get_player_info(player_name):
 def get_player_awards(player_name):
     player_dict = players.get_players()
     player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
-    
     if player:
         player_id = player['id']
-        awards_data = playerawards.PlayerAwards(player_id=player_id).get_normalized_dict()
+        awards_response = playerawards.PlayerAwards(player_id=player_id).get_normalized_dict()
+        print(awards_response)
+        
         awards = {
-            'Hall of Fame': 'N/A',
+            'Hall_of_Fame': False,
             'Championships': 0,
-            'All-NBA': 0,
-            'All-Star': 0,
+            'All_NBA': 0,
+            'All_Star': 0,
             'MVP': 0,
-            'Finals MVP': 0,
+            'Finals_MVP': 0,
             'DPOY': 0,
-            'All-NBA Defense': 0,
-            'ROTY': 0
+            'All_NBA_Defense': 0,
+            'ROTY': 0,
+            'All_Star_MVP' : 0,
         }
         
-        if 'PlayerAwards' in awards_data and awards_data['PlayerAwards']:
-            for award in awards_data['PlayerAwards']:
+        if 'PlayerAwards' in awards_response:
+            for award in awards_response['PlayerAwards']:
                 description = award.get('DESCRIPTION', '')
                 if description == 'Hall of Fame Inductee':
-                    awards['Hall of Fame'] = 'T'
-                elif 'NBA Champion' in description:
+                    awards['Hall_of_Fame'] = True
+                elif description == 'NBA Champion':
                     awards['Championships'] += 1
-                elif 'All-NBA' in description:
-                    awards['All-NBA'] += 1
-                elif 'All-Star' in description:
-                    awards['All-Star'] += 1
-                elif 'Most Valuable Player' in description:
+                elif description == 'All-NBA':
+                    awards['All_NBA'] += 1
+                elif description == 'NBA All-Star':
+                    awards['All_Star'] += 1
+                elif description == 'NBA Most Valuable Player':
                     awards['MVP'] += 1
-                elif 'Finals MVP' in description:
-                    awards['Finals MVP'] += 1
-                elif 'Defensive Player of the Year' in description:
+                elif description == 'NBA Finals Most Valuable Player':
+                    awards['Finals_MVP'] += 1
+                elif description == 'NBA Defensive Player of the Year':
                     awards['DPOY'] += 1
-                elif 'All-Defensive Team' in description:
-                    awards['All-NBA Defense'] += 1
-                elif 'Rookie of the Year' in description:
-                    awards['ROTY'] += 1
-
+                elif description == 'All-Defensive Team':
+                    awards['All_NBA_Defense'] += 1
+                elif description == 'NBA Rookie of the Year':
+                    awards['ROTY'] = 1
+                elif description == 'NBA All-Star Most Valuable Player':
+                    awards['All_Star_MVP'] += 1
+        
         return awards
     return None
+
 
 # View function to handle player comparison
 def compare_players(request):
