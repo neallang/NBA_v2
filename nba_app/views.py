@@ -179,21 +179,30 @@ def compare_players(request):
     player1_info = player2_info = None
     player1_stats = player2_stats = None
     player1_awards = player2_awards = None
+    error_message = None
 
     if request.method == 'POST':
         form = PlayerSearchForm(request.POST)
         if form.is_valid():
             player1_name = form.cleaned_data['player1']
             player2_name = form.cleaned_data['player2']
+            
             if player1_name.lower() == player2_name.lower():
-                form.add_error(None, "You cannot compare a player to themselves.")
+                error_message = "You cannot compare a player to themselves."
             else:
                 player1_info = get_player_info(player1_name)
                 player2_info = get_player_info(player2_name)
-                player1_stats = get_player_stats(player1_name)
-                player2_stats = get_player_stats(player2_name)
-                player1_awards = get_player_awards(player1_name)
-                player2_awards = get_player_awards(player2_name)
+                if not player1_info and not player2_info:
+                    error_message = f"Players '{player1_name}' and '{player2_name}' do not exist."
+                elif not player1_info:
+                    error_message = f"Player '{player1_name}' does not exist."
+                elif not player2_info:
+                    error_message = f"Player '{player2_name}' does not exist."
+                else:
+                    player1_stats = get_player_stats(player1_name)
+                    player2_stats = get_player_stats(player2_name)
+                    player1_awards = get_player_awards(player1_name)
+                    player2_awards = get_player_awards(player2_name)
 
     context = {
         'form': form,
@@ -202,7 +211,8 @@ def compare_players(request):
         'player1_stats': player1_stats,
         'player2_stats': player2_stats,
         'player1_awards': player1_awards,
-        'player2_awards': player2_awards
+        'player2_awards': player2_awards,
+        'error_message': error_message
     }
     return render(request, 'nba_app/compare_players.html', context)
 
