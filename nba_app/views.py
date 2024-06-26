@@ -7,6 +7,7 @@ from datetime import datetime
 from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
+from .utils.deceased import is_deceased
 from .graphs import plot_comparison
 
 
@@ -153,6 +154,9 @@ def get_player_info(player_name):
         else:
             draft_info = "Undrafted"
 
+        deceased, death_date, age_at_death = is_deceased(player_name)
+
+
         # Construct the image URL
         player_id = common_info['PERSON_ID']
         image_url = f"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/{player_id}.png"
@@ -170,7 +174,10 @@ def get_player_info(player_name):
             'draft_info': draft_info,
             'image_url': image_url,
             'position': position,
-            'jersey_num': jersey_num
+            'jersey_num': jersey_num,
+            'deceased': deceased,
+            'death_date': death_date if deceased else None,
+            'age_at_death': age_at_death if deceased else None
         }
     return None
 
