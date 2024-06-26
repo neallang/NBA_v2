@@ -7,6 +7,62 @@ from datetime import datetime
 from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
+from .graphs import plot_comparison
+
+
+# View function to handle player comparison
+def compare_players(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # check if we have an ajax request
+        query = request.GET.get('q', '')
+        player_dict = players.get_players()
+        filtered_players = [player for player in player_dict if query.lower() in player['full_name'].lower()]
+        return JsonResponse(filtered_players, safe=False)
+
+    form = PlayerSearchForm()
+    player1_info = player2_info = None
+    player1_stats = player2_stats = None
+    player1_awards = player2_awards = None
+    error_message = None
+    stat_graphs = {}
+
+    if request.method == 'POST':
+        form = PlayerSearchForm(request.POST)
+        if form.is_valid():
+            player1_name = form.cleaned_data['player1']
+            player2_name = form.cleaned_data['player2']
+            
+            if player1_name.lower() == player2_name.lower():
+                error_message = "You cannot compare a player to themselves."
+            else:
+                player1_info = get_player_info(player1_name)
+                player2_info = get_player_info(player2_name)
+                if not player1_info and not player2_info:
+                    error_message = f"Players '{player1_name}' and '{player2_name}' do not exist."
+                elif not player1_info:
+                    error_message = f"Player '{player1_name}' does not exist."
+                elif not player2_info:
+                    error_message = f"Player '{player2_name}' does not exist."
+                else:
+                    player1_stats = get_player_stats(player1_name)
+                    player2_stats = get_player_stats(player2_name)
+                    player1_awards = get_player_awards(player1_name)
+                    player2_awards = get_player_awards(player2_name)
+
+                    for stat in ['career_pts', 'career_ast', 'career_reb', 'career_blk', 'career_stl']:  
+                        stat_graphs[stat] = plot_comparison(player1_stats, player2_stats, stat)
+
+    context = {
+        'form': form,
+        'player1_info': player1_info,
+        'player2_info': player2_info,
+        'player1_stats': player1_stats,
+        'player2_stats': player2_stats,
+        'player1_awards': player1_awards,
+        'player2_awards': player2_awards,
+        'error_message': error_message,
+        'stat_graphs': stat_graphs,
+    }
+    return render(request, 'nba_app/compare_players.html', context)
 
 # Function to retrieve the corresponding statistics for a given player
 def get_player_stats(player_name):
@@ -17,35 +73,40 @@ def get_player_stats(player_name):
         career_stats = playercareerstats.PlayerCareerStats(player_id=player['id']).get_normalized_dict()
         career_totals = career_stats['CareerTotalsRegularSeason'][0]
 
-        career_ppg = career_totals['PTS']
-        career_apg = career_totals['AST']
-        career_rpg = career_totals['REB']
-        career_bpg = career_totals['BLK'] if career_totals['BLK'] is not None else "N/A"
-        career_spg = career_totals['STL'] if career_totals['STL'] is not None else "N/A"
+        career_pts = career_totals['PTS']
+        career_ast = career_totals['AST']
+        career_reb = career_totals['REB']
+        career_blk = career_totals['BLK'] if career_totals['BLK'] is not None else "N/A"
+        career_stl = career_totals['STL'] if career_totals['STL'] is not None else "N/A"
         career_fg_pct = career_totals['FG_PCT'] * 100 if career_totals['FG_PCT'] is not None else "N/A"
         career_3p_pct = career_totals['FG3_PCT'] * 100 if career_totals['FG3_PCT'] is not None else "N/A"
         career_ft_pct = career_totals['FT_PCT'] * 100 if career_totals['FT_PCT'] is not None else "N/A"
         games_played = career_totals['GP']
 
         if games_played > 0:
-            career_ppg /= games_played
+            career_ppg = career_pts / games_played
             career_ppg = round(career_ppg, 1)
 
-            career_apg /= games_played
+            career_apg =  career_ast / games_played
             career_apg = round(career_apg, 1)
 
-            career_rpg /= games_played
+            career_rpg = career_reb / games_played
             career_rpg = round(career_rpg, 1)
 
-            if career_bpg != "N/A":
-                career_bpg /= games_played
+            if career_blk != "N/A":
+                career_bpg = career_blk / games_played
                 career_bpg = round(career_bpg, 1)
 
-            if career_spg != "N/A":
-                career_spg /= games_played
+            if career_stl != "N/A":
+                career_spg = career_stl / games_played
                 career_spg = round(career_spg, 1)
 
         return {
+            'career_pts': career_pts,
+            'career_ast': career_ast,
+            'career_reb': career_reb,
+            'career_blk': career_blk,
+            'career_stl': career_stl,
             'career_ppg': career_ppg,
             'career_apg': career_apg,
             'career_rpg': career_rpg,
@@ -166,54 +227,5 @@ def get_player_awards(player_name):
         return awards
     return None
 
-
-# View function to handle player comparison
-def compare_players(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # check if we have an ajax request
-        query = request.GET.get('q', '')
-        player_dict = players.get_players()
-        filtered_players = [player for player in player_dict if query.lower() in player['full_name'].lower()]
-        return JsonResponse(filtered_players, safe=False)
-
-    form = PlayerSearchForm()
-    player1_info = player2_info = None
-    player1_stats = player2_stats = None
-    player1_awards = player2_awards = None
-    error_message = None
-
-    if request.method == 'POST':
-        form = PlayerSearchForm(request.POST)
-        if form.is_valid():
-            player1_name = form.cleaned_data['player1']
-            player2_name = form.cleaned_data['player2']
-            
-            if player1_name.lower() == player2_name.lower():
-                error_message = "You cannot compare a player to themselves."
-            else:
-                player1_info = get_player_info(player1_name)
-                player2_info = get_player_info(player2_name)
-                if not player1_info and not player2_info:
-                    error_message = f"Players '{player1_name}' and '{player2_name}' do not exist."
-                elif not player1_info:
-                    error_message = f"Player '{player1_name}' does not exist."
-                elif not player2_info:
-                    error_message = f"Player '{player2_name}' does not exist."
-                else:
-                    player1_stats = get_player_stats(player1_name)
-                    player2_stats = get_player_stats(player2_name)
-                    player1_awards = get_player_awards(player1_name)
-                    player2_awards = get_player_awards(player2_name)
-
-    context = {
-        'form': form,
-        'player1_info': player1_info,
-        'player2_info': player2_info,
-        'player1_stats': player1_stats,
-        'player2_stats': player2_stats,
-        'player1_awards': player1_awards,
-        'player2_awards': player2_awards,
-        'error_message': error_message
-    }
-    return render(request, 'nba_app/compare_players.html', context)
 
 
