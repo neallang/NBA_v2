@@ -78,3 +78,9 @@ button:hover {
 
 }
 
+.graph-container {
+    text-align: center; 
+    margin: 20px auto; 
+    background-color: transparent; 
+    box-shadow: none; 
+}
