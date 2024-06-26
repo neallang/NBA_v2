@@ -41,9 +41,10 @@
 
         <!-- Toggle Buttons -->
         <div class="toggle-buttons">
-            <button id="toggle-stats">View Career Statistics</button>
-            <button id="toggle-awards">View Awards</button>
-            <button id="toggle-info">View Personal Information</button>
+            <button id="toggle-stats">Career Statistics</button>
+            <button id="toggle-graphs">Graph View</button>
+            <button id="toggle-awards">Awards</button>
+            <button id="toggle-info">Personal Information</button>
         </div>
 
         <!-- Player Images -->
@@ -66,13 +67,9 @@
 
         {% include 'nba_app/awards_table.html' %}
 
-        <!-- Display graphs -->
-        {% for stat, graph in stat_graphs.items %}
-            <div>
-                <h3>{{ stat|capfirst }}</h3>
-                <img src="data:image/png;base64,{{ graph }}" alt="Graph for {{ stat }}">
-            </div>
-        {% endfor %}
+        <!-- Display graph -->
+        {% include 'nba_app/graphs.html' %}
+
 
     {% endif %}
 </body>

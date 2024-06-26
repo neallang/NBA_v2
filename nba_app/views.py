@@ -23,7 +23,7 @@ def compare_players(request):
     player1_stats = player2_stats = None
     player1_awards = player2_awards = None
     error_message = None
-    stat_graphs = {}
+    stat_graph = None
 
     if request.method == 'POST':
         form = PlayerSearchForm(request.POST)
@@ -48,8 +48,7 @@ def compare_players(request):
                     player1_awards = get_player_awards(player1_name)
                     player2_awards = get_player_awards(player2_name)
 
-                    for stat in ['career_pts', 'career_ast', 'career_reb', 'career_blk', 'career_stl']:  
-                        stat_graphs[stat] = plot_comparison(player1_stats, player2_stats, stat)
+                    stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
 
     context = {
         'form': form,
@@ -60,7 +59,7 @@ def compare_players(request):
         'player1_awards': player1_awards,
         'player2_awards': player2_awards,
         'error_message': error_message,
-        'stat_graphs': stat_graphs,
+        'stat_graph': stat_graph,
     }
     return render(request, 'nba_app/compare_players.html', context)
 
@@ -73,51 +72,50 @@ def get_player_stats(player_name):
         career_stats = playercareerstats.PlayerCareerStats(player_id=player['id']).get_normalized_dict()
         career_totals = career_stats['CareerTotalsRegularSeason'][0]
 
-        career_pts = career_totals['PTS']
-        career_ast = career_totals['AST']
-        career_reb = career_totals['REB']
-        career_blk = career_totals['BLK'] if career_totals['BLK'] is not None else "N/A"
-        career_stl = career_totals['STL'] if career_totals['STL'] is not None else "N/A"
+        career_pts = career_totals.get('PTS')
+        career_ast = career_totals.get('AST')
+        career_reb = career_totals.get('REB')
+        career_blk = career_totals.get('BLK')
+        career_stl = career_totals.get('STL')
+        career_tov = career_totals.get('TOV')
+        career_pf = career_totals.get('PF')
         career_fg_pct = career_totals['FG_PCT'] * 100 if career_totals['FG_PCT'] is not None else "N/A"
         career_3p_pct = career_totals['FG3_PCT'] * 100 if career_totals['FG3_PCT'] is not None else "N/A"
         career_ft_pct = career_totals['FT_PCT'] * 100 if career_totals['FT_PCT'] is not None else "N/A"
-        games_played = career_totals['GP']
+        games_played = career_totals.get('GP')
 
-        if games_played > 0:
-            career_ppg = career_pts / games_played
-            career_ppg = round(career_ppg, 1)
+        career_ppg = round(career_pts / games_played, 1) if games_played > 0 else "N/A"
+        career_apg = round(career_ast / games_played, 1) if games_played > 0 else "N/A"
+        career_rpg = round(career_reb / games_played, 1) if games_played > 0 else "N/A"
+        career_bpg = round(career_blk / games_played, 1) if career_blk is not None and games_played > 0 else "N/A"
+        career_spg = round(career_stl / games_played, 1) if career_stl is not None and games_played > 0 else "N/A"
+        career_tpg = round(career_tov / games_played, 1) if career_tov is not None and games_played > 0 else "N/A"
+        career_fpg = round(career_pf / games_played, 1) if career_pf is not None and games_played > 0 else "N/A"
 
-            career_apg =  career_ast / games_played
-            career_apg = round(career_apg, 1)
-
-            career_rpg = career_reb / games_played
-            career_rpg = round(career_rpg, 1)
-
-            if career_blk != "N/A":
-                career_bpg = career_blk / games_played
-                career_bpg = round(career_bpg, 1)
-
-            if career_stl != "N/A":
-                career_spg = career_stl / games_played
-                career_spg = round(career_spg, 1)
+        
 
         return {
             'career_pts': career_pts,
             'career_ast': career_ast,
             'career_reb': career_reb,
-            'career_blk': career_blk,
-            'career_stl': career_stl,
+            'career_blk': career_blk if career_blk != 0 else "N/A",
+            'career_stl': career_stl if career_stl != 0 else "N/A",
+            'career_tov': career_tov if career_tov != 0 else "N/A",
+            'career_pf': career_pf if career_pf != 0 else "N/A",
             'career_ppg': career_ppg,
             'career_apg': career_apg,
             'career_rpg': career_rpg,
             'career_bpg': career_bpg,
             'career_spg': career_spg,
+            'career_tpg': career_tpg,
+            'career_fpg': career_fpg,
             'career_fg_pct': round(career_fg_pct, 1) if career_fg_pct != "N/A" else "N/A",
             'career_3p_pct': round(career_3p_pct, 1) if career_3p_pct != "N/A" else "N/A",
             'career_ft_pct': round(career_ft_pct, 1) if career_ft_pct != "N/A" else "N/A",
             'games_played': games_played
         }
     return None
+
 
 # Function to format ordinal numbers (1st, 2nd, 3rd)
 def ordinal(n):
@@ -142,6 +140,8 @@ def get_player_info(player_name):
         birth_date_obj = datetime.strptime(birth_date, '%Y-%m-%dT%H:%M:%S')
         formatted_birth_date = birth_date_obj.strftime('%B %d, %Y')
         age = (datetime.now() - birth_date_obj).days // 365
+        position = common_info['POSITION']
+        jersey_num = common_info['JERSEY']
 
         draft_year = common_info.get('DRAFT_YEAR')
         draft_round = common_info.get('DRAFT_ROUND')
@@ -169,6 +169,8 @@ def get_player_info(player_name):
             'country': common_info['COUNTRY'],
             'draft_info': draft_info,
             'image_url': image_url,
+            'position': position,
+            'jersey_num': jersey_num
         }
     return None
 
