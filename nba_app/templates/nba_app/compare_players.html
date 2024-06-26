@@ -65,6 +65,15 @@
         {% include 'nba_app/career_stats_table.html' %}
 
         {% include 'nba_app/awards_table.html' %}
+
+        <!-- Display graphs -->
+        {% for stat, graph in stat_graphs.items %}
+            <div>
+                <h3>{{ stat|capfirst }}</h3>
+                <img src="data:image/png;base64,{{ graph }}" alt="Graph for {{ stat }}">
+            </div>
+        {% endfor %}
+
     {% endif %}
 </body>
 </html>
