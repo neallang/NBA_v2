@@ -27,7 +27,7 @@ def plot_comparison(player1_name, player2_name, player1_stats, player2_stats):
     # create a DataFrame
     df = pd.DataFrame(data)
 
-    plt.rcParams['font.family'] = 'Helvetica'  # change this to match global font once established
+    # plt.rcParams['font.family'] = 'Helvetica'  # change this to match global font once established
 
     # create the plot
     plt.figure(figsize=(12, 8))
