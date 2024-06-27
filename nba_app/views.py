@@ -9,6 +9,7 @@ from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
 from .utils.deceased import is_deceased
 from .graphs import plot_comparison
+from django.core.cache import cache
 
 
 # View function to handle player comparison
@@ -66,6 +67,14 @@ def compare_players(request):
 
 # Function to retrieve the corresponding statistics for a given player
 def get_player_stats(player_name):
+    # Generate a unique cache key
+    cache_key = f"player_stats_{player_name.lower()}"
+    
+    # Check if the data is in the cache
+    stats = cache.get(cache_key)
+    if stats:
+        return stats
+
     player_dict = players.get_players()
     player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
     if player:
@@ -93,9 +102,7 @@ def get_player_stats(player_name):
         career_tpg = round(career_tov / games_played, 1) if career_tov is not None and games_played > 0 else "N/A"
         career_fpg = round(career_pf / games_played, 1) if career_pf is not None and games_played > 0 else "N/A"
 
-        
-
-        return {
+        stats = {
             'career_pts': career_pts,
             'career_ast': career_ast,
             'career_reb': career_reb,
@@ -115,6 +122,10 @@ def get_player_stats(player_name):
             'career_ft_pct': round(career_ft_pct, 1) if career_ft_pct != "N/A" else "N/A",
             'games_played': games_played
         }
+        
+        cache.set(cache_key, stats, timeout=60*60*24)  # Cache timeout set to 24 hours
+        
+        return stats
     return None
 
 
@@ -131,58 +142,75 @@ def ordinal(n):
 
 # Function to retrieve the corresponding personal information for a given player
 def get_player_info(player_name):
-    player_dict = players.get_players()
-    player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
-    if player:
-        player_info = commonplayerinfo.CommonPlayerInfo(player_id=player['id']).get_normalized_dict()
-        common_info = player_info['CommonPlayerInfo'][0]
+    # Generate a unique cache key based on the player name
+    cache_key = f"player_info_{player_name.replace(' ', '_').lower()}"
+    
+    # Try to get the cached player info
+    player_info = cache.get(cache_key)
+    
+    if player_info is None:
+        # If not cached, fetch the data from the API
+        player_dict = players.get_players()
+        player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
+        if player:
+            player_info = commonplayerinfo.CommonPlayerInfo(player_id=player['id']).get_normalized_dict()
+            common_info = player_info['CommonPlayerInfo'][0]
 
-        birth_date = common_info['BIRTHDATE']
-        birth_date_obj = datetime.strptime(birth_date, '%Y-%m-%dT%H:%M:%S')
-        formatted_birth_date = birth_date_obj.strftime('%B %d, %Y')
-        age = (datetime.now() - birth_date_obj).days // 365
-        position = common_info['POSITION']
-        jersey_num = common_info['JERSEY']
+            birth_date = common_info['BIRTHDATE']
+            birth_date_obj = datetime.strptime(birth_date, '%Y-%m-%dT%H:%M:%S')
+            formatted_birth_date = birth_date_obj.strftime('%B %d, %Y')
+            age = (datetime.now() - birth_date_obj).days // 365
+            position = common_info['POSITION']
+            jersey_num = common_info['JERSEY']
 
-        draft_year = common_info.get('DRAFT_YEAR')
-        draft_round = common_info.get('DRAFT_ROUND')
-        draft_number = common_info.get('DRAFT_NUMBER')
+            draft_year = common_info.get('DRAFT_YEAR')
+            draft_round = common_info.get('DRAFT_ROUND')
+            draft_number = common_info.get('DRAFT_NUMBER')
 
-        if draft_year and draft_round and draft_number and draft_round != "Undrafted":
-            draft_team = f"{common_info['TEAM_CITY']} {common_info['TEAM_NAME']}" if common_info['TEAM_CITY'] and common_info['TEAM_NAME'] else 'Unknown Team'
-            draft_info = f" {draft_year}, {draft_team}\n({ordinal(draft_round)} round: {ordinal(draft_number)} pick)"
-        else:
-            draft_info = "Undrafted"
+            if draft_year and draft_round and draft_number and draft_round != "Undrafted":
+                draft_team = f"{common_info['TEAM_CITY']} {common_info['TEAM_NAME']}" if common_info['TEAM_CITY'] and common_info['TEAM_NAME'] else 'Unknown Team'
+                draft_info = f" {draft_year}, {draft_team}\n({ordinal(draft_round)} round: {ordinal(draft_number)} pick)"
+            else:
+                draft_info = "Undrafted"
 
-        deceased, death_date, age_at_death = is_deceased(player_name)
+            deceased, death_date, age_at_death = is_deceased(player_name)
 
+            # Construct the image URL
+            player_id = common_info['PERSON_ID']
+            image_url = f"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/{player_id}.png"
 
-        # Construct the image URL
-        player_id = common_info['PERSON_ID']
-        image_url = f"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/{player_id}.png"
-
-
-
-        return {
-            'full_name': common_info['DISPLAY_FIRST_LAST'],
-            'birth_date': formatted_birth_date,
-            'age': age,
-            'height': common_info['HEIGHT'],
-            'weight': common_info['WEIGHT'],
-            'college': common_info['SCHOOL'],
-            'country': common_info['COUNTRY'],
-            'draft_info': draft_info,
-            'image_url': image_url,
-            'position': position,
-            'jersey_num': jersey_num,
-            'deceased': deceased,
-            'death_date': death_date if deceased else None,
-            'age_at_death': age_at_death if deceased else None
-        }
-    return None
+            player_info = {
+                'full_name': common_info['DISPLAY_FIRST_LAST'],
+                'birth_date': formatted_birth_date,
+                'age': age,
+                'height': common_info['HEIGHT'],
+                'weight': common_info['WEIGHT'],
+                'college': common_info['SCHOOL'],
+                'country': common_info['COUNTRY'],
+                'draft_info': draft_info,
+                'image_url': image_url,
+                'position': position,
+                'jersey_num': jersey_num,
+                'deceased': deceased,
+                'death_date': death_date if deceased else None,
+                'age_at_death': age_at_death if deceased else None
+            }
+            
+            # Cache the player info for 1 hour
+            cache.set(cache_key, player_info, timeout=60*60)
+    
+    return player_info
 
 # Function to retrieve player awards
 def get_player_awards(player_name):
+    # Generate a unique cache key
+    cache_key = f"player_awards_{player_name.lower()}"
+    
+    # Check if the data is in the cache
+    awards = cache.get(cache_key)
+    if awards:
+        return awards
+    
     player_dict = players.get_players()
     player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
     if player:
@@ -203,8 +231,6 @@ def get_player_awards(player_name):
             'ROTY': 'False',
             'All_Star_MVP' : 0,
         }
-
-
         
         if 'PlayerAwards' in awards_response:
             for award in awards_response['PlayerAwards']:
@@ -230,10 +256,12 @@ def get_player_awards(player_name):
                 elif description == 'NBA All-Star Most Valuable Player':
                     awards['All_Star_MVP'] += 1
 
-        if player_name.lower() == 'kobe bryant':    # unfortunate but unavoidable edge case. the API is incorrect for some reason regarding his MVPs
-            awards['MVP'] = 4
+
+        # Cache the result
+        cache.set(cache_key, awards, timeout=60*60*24)  # Cache timeout set to 24 hours
         
         return awards
+    
     return None
 
 
