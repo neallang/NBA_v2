@@ -8,7 +8,7 @@ from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
 from .utils.deceased import is_deceased
-from .utils.player_dict import fetch_player_dict
+from .utils.fetch_data import fetch_player_dict
 from .utils.ordinal import ordinal
 from .graphs import plot_comparison
 from django.core.cache import cache
