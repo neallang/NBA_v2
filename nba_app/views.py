@@ -114,7 +114,8 @@ def get_player_info(player_name, player_dict):
             age = (datetime.now() - birth_date_obj).days // 365
             position = common_info['POSITION']
             jersey_num = common_info['JERSEY']
-            is_active = str(common_info['ROSTERSTATUS'] == 'Active')            
+            is_active = str(common_info['ROSTERSTATUS'] == 'Active')     
+            print(player['full_name'], is_active)       
 
             draft_year = common_info.get('DRAFT_YEAR')
             draft_round = common_info.get('DRAFT_ROUND')
@@ -266,10 +267,13 @@ def get_player_awards(player_name, player_dict):
                         awards['ROTY'] = 'True'
                     elif description == 'NBA All-Star Most Valuable Player':
                         awards['All_Star_MVP'] += 1
+    
 
 
             # Cache the result
             cache.set(cache_key, awards, timeout=60*60*24)  # Cache timeout set to 24 hours
+
+
         
     return awards
 

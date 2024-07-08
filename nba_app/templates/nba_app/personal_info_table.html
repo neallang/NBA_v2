@@ -62,9 +62,21 @@
         <td>{{ player2_info.draft_info|linebreaksbr }}</td>
     </tr>
     <tr>
-        <td>{{ player1_info.is_active }}</td>
+        <td>
+            {% if player1_info.is_active == 'True' %}
+                <i class="fas fa-check"></i>
+            {% else %}
+                <i class="fas fa-times"></i>
+            {% endif %}
+        </td>
         <td>Active</td>
-        <td>{{ player2_info.is_active }}</td>
+        <td>
+            {% if player2_info.is_active == 'True' %}
+                <i class="fas fa-check"></i>
+            {% else %}
+                <i class="fas fa-times"></i>
+            {% endif %}
+        </td>
     </tr>
 </table>
 {% endif %}
