@@ -36,6 +36,12 @@
         <button type="submit">Compare</button>
     </form>
 
+    {% if featured_comparison %}
+        <div class="featured-caption">
+            <p>Featured Comparison of the Day</p>
+        </div>
+    {% endif %}
+
     {% if player1_info and player2_info %}
         <h2>{{ player1_info.full_name }} vs {{ player2_info.full_name }}</h2>
 

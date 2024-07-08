@@ -4,6 +4,7 @@ from .forms import PlayerSearchForm
 from nba_api.stats.static import players
 from nba_api.stats.endpoints import commonplayerinfo, playercareerstats, playerawards
 from datetime import datetime
+from datetime import date
 from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
@@ -12,10 +13,13 @@ from .utils.fetch_data import fetch_player_dict, fetch_player_info, fetch_player
 from .utils.ordinal import ordinal
 from .graphs import plot_comparison
 from django.core.cache import cache
+import random
 
 
 # View function to handle player comparison
 def compare_players(request):
+    featured_comparison = False
+
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # check if we have an ajax request
         query = request.GET.get('q', '')
         player_dict = players.get_players()
@@ -55,6 +59,23 @@ def compare_players(request):
 
                     stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
 
+    else:
+        player_dict = fetch_player_dict()
+        featured_player1, featured_player2 = get_featured_comparison()
+        if featured_player1 and featured_player2:
+            player1_name = featured_player1['full_name']
+            player2_name = featured_player2['full_name']
+
+            player1_info = get_player_info(player1_name, player_dict)
+            player2_info = get_player_info(player2_name, player_dict)
+            player1_stats = get_player_stats(player1_name, player_dict)
+            player2_stats = get_player_stats(player2_name, player_dict)
+            player1_awards = get_player_awards(player1_name, player_dict)
+            player2_awards = get_player_awards(player2_name, player_dict)
+
+            stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
+            featured_comparison = True
+
 
 
     context = {
@@ -67,6 +88,7 @@ def compare_players(request):
         'player2_awards': player2_awards,
         'error_message': error_message,
         'stat_graph': stat_graph,
+        'featured_comparison': featured_comparison
     }
     return render(request, 'nba_app/compare_players.html', context)
 
@@ -249,7 +271,6 @@ def get_player_awards(player_name, player_dict):
 def get_featured_comparison():
     cache_key = 'featured_comparison'
     today = date.today()
-    print(today)
     
     featured_comparison = cache.get(cache_key)
     if not featured_comparison or featured_comparison['date'] != today:

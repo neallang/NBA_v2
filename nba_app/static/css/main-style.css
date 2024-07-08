@@ -37,6 +37,13 @@ button:hover {
     background-color: #0056b3;
 }
 
+.featured-caption {
+    text-align: center;
+    font-weight: 700;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
 .autocomplete {
     display: inline-block;
     position: relative;
