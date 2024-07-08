@@ -8,7 +8,7 @@ from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
 from .utils.web_scraping import is_deceased
-from .utils.fetch_data import fetch_player_dict
+from .utils.fetch_data import fetch_player_dict, fetch_player_info, fetch_player_stats, fetch_player_awards, fetch_active_players
 from .utils.ordinal import ordinal
 from .graphs import plot_comparison
 from django.core.cache import cache
@@ -16,8 +16,6 @@ from django.core.cache import cache
 
 # View function to handle player comparison
 def compare_players(request):
-    player_dict = fetch_player_dict()  # Fetch the player dictionary once
-
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # check if we have an ajax request
         query = request.GET.get('q', '')
         player_dict = players.get_players()
@@ -40,6 +38,7 @@ def compare_players(request):
             if player1_name.lower() == player2_name.lower():
                 error_message = "You cannot compare a player to themselves."
             else:
+                player_dict = fetch_player_dict()
                 player1_info = get_player_info(player1_name, player_dict)
                 player2_info = get_player_info(player2_name, player_dict)
                 if not player1_info and not player2_info:
@@ -55,6 +54,8 @@ def compare_players(request):
                     player2_awards = get_player_awards(player2_name, player_dict)
 
                     stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
+
+
 
     context = {
         'form': form,
@@ -78,7 +79,8 @@ def get_player_info(player_name, player_dict):
     if player_info is None:
         player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
         if player:
-            player_info = commonplayerinfo.CommonPlayerInfo(player_id=player['id']).get_normalized_dict()
+            player_id = player['id']
+            player_info = fetch_player_info(player_id)
             common_info = player_info['CommonPlayerInfo'][0]
 
             birth_date = common_info['BIRTHDATE']
@@ -103,6 +105,8 @@ def get_player_info(player_name, player_dict):
             # Construct the image URL
             player_id = common_info['PERSON_ID']
             image_url = f"https://ak-static.cms.nba.com/wp-content/uploads/headshots/nba/latest/260x190/{player_id}.png"
+
+           
 
             player_info = {
                 'full_name': common_info['DISPLAY_FIRST_LAST'],
@@ -135,7 +139,8 @@ def get_player_stats(player_name, player_dict):
     if stats is None:
         player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
         if player:
-            career_stats = playercareerstats.PlayerCareerStats(player_id=player['id']).get_normalized_dict()
+            player_id = player['id']
+            career_stats = fetch_player_stats(player_id)
             career_totals = career_stats['CareerTotalsRegularSeason'][0]
 
             career_pts = career_totals.get('PTS')
@@ -193,7 +198,7 @@ def get_player_awards(player_name, player_dict):
         player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
         if player:
             player_id = player['id']
-            awards_response = playerawards.PlayerAwards(player_id=player_id).get_normalized_dict()
+            awards_response = fetch_player_awards(player_id)
             
             awards = {
                 'Hall_of_Fame': 'True' if is_hall_of_famer(player_name) else 'False',   # need this for players 2019-present. older HOF will be handled by API.
@@ -239,5 +244,27 @@ def get_player_awards(player_name, player_dict):
             cache.set(cache_key, awards, timeout=60*60*24)  # Cache timeout set to 24 hours
         
     return awards
+
+
+def get_featured_comparison():
+    cache_key = 'featured_comparison'
+    today = date.today()
+    print(today)
+    
+    featured_comparison = cache.get(cache_key)
+    if not featured_comparison or featured_comparison['date'] != today:
+        active_players = fetch_active_players()
+        if len(active_players) < 2:
+            return None, None  # Not enough players to compare
+
+        player1, player2 = random.sample(active_players, 2)
+        featured_comparison = {
+            'date': today,
+            'player1': player1,
+            'player2': player2
+        }
+        cache.set(cache_key, featured_comparison, timeout=60*60*24)  # Cache for 1 day
+    
+    return featured_comparison['player1'], featured_comparison['player2']
 
 

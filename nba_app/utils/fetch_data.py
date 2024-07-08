@@ -33,3 +33,12 @@ def fetch_player_awards(player_id):
         player_awards = playerawards.PlayerAwards(player_id=player_id).get_normalized_dict()
         cache.set(cache_key, player_awards, timeout=86400)
     return player_awards
+
+def fetch_active_players():
+    cache_key = 'active_players'
+    active_players = cache.get(cache_key)
+    if not active_players:
+        all_players = fetch_player_dict()
+        activate_players = [player for player in all_players if player['is_active']]
+        cache.set(cache_key, activate_players, timeout=60*60*24)
+    return active_players
