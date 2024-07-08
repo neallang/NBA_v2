@@ -61,22 +61,5 @@
         <td>Draft Info</td>
         <td>{{ player2_info.draft_info|linebreaksbr }}</td>
     </tr>
-    <tr>
-        <td>
-            {% if player1_info.is_active == 'True' %}
-                <i class="fas fa-check"></i>
-            {% else %}
-                <i class="fas fa-times"></i>
-            {% endif %}
-        </td>
-        <td>Active</td>
-        <td>
-            {% if player2_info.is_active == 'True' %}
-                <i class="fas fa-check"></i>
-            {% else %}
-                <i class="fas fa-times"></i>
-            {% endif %}
-        </td>
-    </tr>
 </table>
 {% endif %}

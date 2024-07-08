@@ -4,6 +4,23 @@
         <th colspan="3">Career Statistics (Per Game)</th>
     </tr>
     <tr>
+        <td>
+            {% if player1_info.is_active == 'True' %}
+                <i class="fas fa-check"></i>
+            {% else %}
+                <i class="fas fa-times"></i>
+            {% endif %}
+        </td>
+        <td>Active</td>
+        <td>
+            {% if player2_info.is_active == 'True' %}
+                <i class="fas fa-check"></i>
+            {% else %}
+                <i class="fas fa-times"></i>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
         <td class="{% if player1_stats.games_played > player2_stats.games_played %}highlight-cell{% elif player2_stats.games_played == 'N/A' and player1_stats.games_played != 'N/A' %}highlight-cell{% endif %}">{{ player1_stats.games_played }}</td>
         <td>Games Played</td>
         <td class="{% if player2_stats.games_played > player1_stats.games_played %}highlight-cell{% elif player1_stats.games_played == 'N/A' and player2_stats.games_played != 'N/A' %}highlight-cell{% endif %}">{{ player2_stats.games_played }}</td>

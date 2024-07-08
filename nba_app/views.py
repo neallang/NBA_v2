@@ -115,7 +115,6 @@ def get_player_info(player_name, player_dict):
             position = common_info['POSITION']
             jersey_num = common_info['JERSEY']
             is_active = str(common_info['ROSTERSTATUS'] == 'Active')     
-            print(player['full_name'], is_active)       
 
             draft_year = common_info.get('DRAFT_YEAR')
             draft_round = common_info.get('DRAFT_ROUND')
@@ -171,6 +170,8 @@ def get_player_stats(player_name, player_dict):
             player_id = player['id']
             career_stats = fetch_player_stats(player_id)
             career_totals = career_stats['CareerTotalsRegularSeason'][0]
+
+            print(career_stats)
 
             career_pts = career_totals.get('PTS')
             career_ast = career_totals.get('AST')
