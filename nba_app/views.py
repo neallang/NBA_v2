@@ -59,6 +59,9 @@ def compare_players(request):
 
                     stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
 
+        else:
+            error_message = "Please enter two valid players"
+
     else:
         player_dict = fetch_player_dict()
         featured_player1, featured_player2 = get_featured_comparison()
