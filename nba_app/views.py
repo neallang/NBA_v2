@@ -170,9 +170,7 @@ def get_player_stats(player_name, player_dict):
             player_id = player['id']
             career_stats = fetch_player_stats(player_id)
             career_totals = career_stats['CareerTotalsRegularSeason'][0]
-
-            print(career_stats)
-
+            
             career_pts = career_totals.get('PTS')
             career_ast = career_totals.get('AST')
             career_reb = career_totals.get('REB')

@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('Agg')  # Use 'Agg' backend for non-interactive plotting
+matplotlib.use('Agg')  
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -31,11 +31,15 @@ def plot_comparison(player1_name, player2_name, player1_stats, player2_stats):
 
     # create the plot
     plt.figure(figsize=(12, 8))
-    ax = sns.barplot(x='Stat', y='Value', hue='Player', data=df, palette='viridis')
+
+    custom_palette = ['#17408B', '#C9082A']  # NBA colors
+    ax = sns.barplot(x='Stat', y='Value', hue='Player', data=df, palette=custom_palette)
+
 
     plt.title('Career Statistics', fontsize=20, fontweight='bold')
     ax.set_xlabel('Statistic', labelpad=20, fontweight='bold', fontsize=14)  # labelpad to move label out a little
     ax.set_ylabel('Value', labelpad=20, fontweight='bold', fontsize=14)  
+    ax.yaxis.grid(True, linestyle='--', which='both', color='grey', alpha=0.3)
     plt.legend(title='Player', fontsize=12, title_fontsize='13', loc='upper right')
 
     # iterate over each bar in graph
