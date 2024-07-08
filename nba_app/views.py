@@ -114,10 +114,12 @@ def get_player_info(player_name, player_dict):
             age = (datetime.now() - birth_date_obj).days // 365
             position = common_info['POSITION']
             jersey_num = common_info['JERSEY']
+            is_active = str(common_info['ROSTERSTATUS'] == 'Active')            
 
             draft_year = common_info.get('DRAFT_YEAR')
             draft_round = common_info.get('DRAFT_ROUND')
             draft_number = common_info.get('DRAFT_NUMBER')
+            
 
             if draft_year and draft_round and draft_number and draft_round != "Undrafted":
                 draft_team = f"{common_info['TEAM_CITY']} {common_info['TEAM_NAME']}" if common_info['TEAM_CITY'] and common_info['TEAM_NAME'] else 'Unknown Team'
@@ -147,7 +149,8 @@ def get_player_info(player_name, player_dict):
                 'jersey_num': jersey_num,
                 'deceased': deceased,
                 'death_date': death_date if deceased else None,
-                'age_at_death': age_at_death if deceased else None
+                'age_at_death': age_at_death if deceased else None,
+                'is_active': is_active
             }
             
             # Cache the player info for 1 hour
