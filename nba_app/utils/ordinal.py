@@ -1,4 +1,4 @@
-# Function to format ordinal numbers (1st, 2nd, 3rd) - formatting 
+# Function to format ordinal numbers (1st, 2nd, 3rd)
 def ordinal(n):
     if n == "Undrafted":
         return ""

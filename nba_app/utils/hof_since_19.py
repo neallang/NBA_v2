@@ -1,4 +1,4 @@
-# API not updated since 2019 (HOF only)
+# API not updated since 2019 (HOF only) - manually importing data
 hall_of_fame = {
     "2019": ["Vlade Divac", "Sidney Moncrief", "Jack Sikma", "Paul Westphal", "Bobby Jones", "Carl Braun", "Chuck Cooper"],
     "2020": ["Kobe Bryant", "Tim Duncan", "Kevin Garnett", "Rudy Tomjanovich"],
@@ -8,6 +8,7 @@ hall_of_fame = {
     "2024": ["Carmelo Anthony", "Dwight Howard", "Vince Carter", "Amar'e Stoudemire"]
 }
 
+# Utility function to check if a player is a hall of famer. See note above.
 def is_hall_of_famer(player_name):
     for year, players in hall_of_fame.items():
         if player_name in players:

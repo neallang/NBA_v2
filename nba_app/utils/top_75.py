@@ -78,5 +78,6 @@ TOP_75_PLAYERS = {
     "James Worthy": 'True',
 }
 
+# Utility function to check if a player is in the NBA Top 75 list
 def is_top_75(player_name):
     return TOP_75_PLAYERS.get(player_name, False)

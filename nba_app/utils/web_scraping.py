@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from django.core.cache import cache
 
+# Utility function that searches wikipedia to see if a player is dead. Also uses RegEx to format
 def is_deceased(player_name):
     cache_key = f"deceased_{player_name.lower().replace(' ', '_')}"
     cached_result = cache.get(cache_key)

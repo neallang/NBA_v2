@@ -16,7 +16,7 @@ from django.core.cache import cache
 import random
 
 
-# View function to handle player comparison
+# Player comparison - Main function which calls others
 def compare_players(request):
     featured_comparison = False
 
@@ -95,7 +95,7 @@ def compare_players(request):
     }
     return render(request, 'nba_app/compare_players.html', context)
 
-# Function to retrieve the corresponding personal information for a given player
+# Helper function to retrieve the personal information for a given player
 def get_player_info(player_name, player_dict):
     cache_key = f"player_info_{player_name.replace(' ', '_').lower()}"
     player_info = cache.get(cache_key)
@@ -158,7 +158,7 @@ def get_player_info(player_name, player_dict):
     
     return player_info
 
-# Function to retrieve the corresponding statistics for a given player
+# Helper function to retrieve the statistics for a given player
 def get_player_stats(player_name, player_dict):
     cache_key = f"player_stats_{player_name.lower()}"
     stats = cache.get(cache_key)
@@ -216,7 +216,7 @@ def get_player_stats(player_name, player_dict):
         
     return stats
 
-# Function to retrieve player awards
+# Helper function to retrieve the awards for a given player
 def get_player_awards(player_name, player_dict):
     cache_key = f"player_awards_{player_name.lower()}"
     awards = cache.get(cache_key)
@@ -276,7 +276,7 @@ def get_player_awards(player_name, player_dict):
         
     return awards
 
-
+# Helper function to retrieve the featured players of the day
 def get_featured_comparison():
     cache_key = 'featured_comparison'
     today = date.today()

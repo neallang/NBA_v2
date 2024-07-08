@@ -3,6 +3,7 @@ from nba_api.stats.endpoints import commonplayerinfo, playercareerstats, playera
 from django.core.cache import cache
 import threading
 
+# Utility function to retrieve player dictionary from nba_api
 def fetch_player_dict():
     player_dict = cache.get('player_dict')
     if not player_dict:
@@ -10,6 +11,7 @@ def fetch_player_dict():
         cache.set('player_dict', player_dict, timeout=86400)  # Cache for 1 day
     return player_dict
 
+# Utility function to retrieve player information from nba_api
 def fetch_player_info(player_id):
     cache_key = f"player_info_{player_id}"
     player_info = cache.get(cache_key)
@@ -18,6 +20,7 @@ def fetch_player_info(player_id):
         cache.set(cache_key, player_info, timeout=86400)
     return player_info
 
+# Utility function to retrieve player statistics from nba_api
 def fetch_player_stats(player_id):
     cache_key = f"player_stats_{player_id}"
     player_stats = cache.get(cache_key)
@@ -26,6 +29,7 @@ def fetch_player_stats(player_id):
         cache.set(cache_key, player_stats, timeout=86400)
     return player_stats
 
+# Utility function to retrieve player awards from nba_api
 def fetch_player_awards(player_id):
     cache_key = f"player_awards_{player_id}"
     player_awards = cache.get(cache_key)
@@ -34,6 +38,7 @@ def fetch_player_awards(player_id):
         cache.set(cache_key, player_awards, timeout=86400)
     return player_awards
 
+# Utility function to retrieve active players from nba_api
 def fetch_active_players():
     cache_key = 'active_players'
     active_players = cache.get(cache_key)

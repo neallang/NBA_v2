@@ -1,4 +1,4 @@
-# while this info could be manipulated via API, this is actually going to be much faster
+# While this info could be manipulated via API, this is actually going to be much faster. No direct field in API
 scoring_titles = {
     "1946-47": "Joe Fulks",
     "1947-48": "Max Zaslofsky",
@@ -80,5 +80,6 @@ scoring_titles = {
     "2023-24": "Luka Dončić",
 }
 
+# Utility function to return how many scoring titles a player has
 def get_scoring_titles(player_name):
     return sum(1 for title in scoring_titles.values() if title == player_name)

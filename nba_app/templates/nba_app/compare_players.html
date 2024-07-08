@@ -14,7 +14,7 @@
     <!-- Include jQuery and jQuery UI -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <!-- Include the external JavaScript files -->
+    <!-- Include external JavaScript files -->
     <script src="{% static 'js/autocomplete.js' %}"></script>
     <script src="{% static 'js/toggleTables.js' %}"></script>
 
@@ -38,6 +38,7 @@
         <button type="submit">Compare</button>
     </form>
 
+    <!-- Comparison of the Dat -->
     {% if featured_comparison %}
         <div class="featured-caption">
             <p>Featured Comparison of the Day</p>
@@ -55,7 +56,7 @@
             <button id="toggle-info">Personal Information</button>
         </div>
 
-        <!-- Player Images -->
+        <!-- Images -->
         <div class="player-images">
             <div class="player-image-container">
                 <img src="{{ player1_info.image_url }}" alt="{{ player1_info.full_name }}" class="player-image">
@@ -70,9 +71,10 @@
         <!-- Include Personal Information Table -->
         {% include 'nba_app/personal_info_table.html' %}
 
-        <!-- Include Career Statistics Table -->
+        <!-- Include Career Stats Table -->
         {% include 'nba_app/career_stats_table.html' %}
 
+        <!-- Include Career Awards Table -->
         {% include 'nba_app/awards_table.html' %}
 
         <!-- Display graph -->
@@ -81,6 +83,7 @@
 
     {% endif %}
 
+    <!-- Citation (Flaticon) -->
     <div class="attribution">
         <a href="https://www.flaticon.com/free-icons/basketball-jersey" title="basketball jersey icons">Basketball jersey icons created by Nikita Golubev - Flaticon</a>
     </div>
