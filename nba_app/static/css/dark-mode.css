@@ -1,0 +1,30 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.error-message {
+    color: #ff4c4c;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+}
+
+button {
+    background-color: #333;
+    color: #fff;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+tr:nth-child(even) {
+    background-color: #111010;
+}
+
+tr:hover {
+    background-color: #5a5959;
+}
+
