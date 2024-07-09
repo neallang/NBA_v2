@@ -20,7 +20,7 @@ def fetch_player_info(player_id):
         cache.set(cache_key, player_info, timeout=86400)
     return player_info
 
-# Utility function to retrieve player statistics from nba_api
+# Utility function to retrieve player career statistics from nba_api
 def fetch_player_career_stats(player_id):
     cache_key = f"player_career_stats_{player_id}"
     player_stats = cache.get(cache_key)
@@ -28,6 +28,16 @@ def fetch_player_career_stats(player_id):
         player_stats = playercareerstats.PlayerCareerStats(player_id=player_id).get_normalized_dict()
         cache.set(cache_key, player_stats, timeout=86400)
     return player_stats
+
+# Utility function to retrieve player season statistics from nba_api
+def fetch_player_season_stats(player_id):
+    cache_key = f"player_season_stats_{player_id}"
+    season_stats = cache.get(cache_key)
+    if not season_stats:
+        response = playercareerstats.PlayerCareerStats(player_id=player_id).get_normalized_dict()
+        season_stats = response['SeasonTotalsRegularSeason']
+        cache.set(cache_key, season_stats, timeout=86400)
+    return season_stats
 
 # Utility function to retrieve player awards from nba_api
 def fetch_player_awards(player_id):

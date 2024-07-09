@@ -9,9 +9,9 @@ from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
 from .utils.web_scraping import is_deceased
-from .utils.fetch_data import fetch_player_dict, fetch_player_info, fetch_player_career_stats, fetch_player_awards, fetch_active_players
+from .utils.fetch_data import fetch_player_dict, fetch_player_info, fetch_player_career_stats, fetch_player_season_stats, fetch_player_awards, fetch_active_players
 from .utils.ordinal import ordinal
-from .graphs import plot_comparison
+from .graphs import plot_comparison, plot_career_progression
 from django.core.cache import cache
 import random
 
@@ -28,10 +28,13 @@ def compare_players(request):
 
     form = PlayerSearchForm()
     player1_info = player2_info = None
+    # rename to career
     player1_stats = player2_stats = None
+    player1_season_stats = player2_season_stats = None
     player1_awards = player2_awards = None
     error_message = None
     stat_graph = None
+    player1_progression = player2_progression = None
 
     if request.method == 'POST':
         form = PlayerSearchForm(request.POST)
@@ -57,7 +60,12 @@ def compare_players(request):
                     player1_awards = get_player_awards(player1_name, player_dict)
                     player2_awards = get_player_awards(player2_name, player_dict)
 
+                    player1_season_stats = get_player_season_stats(player1_name, player_dict)
+                    player2_season_stats = get_player_season_stats(player2_name, player_dict)
+
                     stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
+                    player1_progression = plot_career_progression(player1_name, player1_season_stats)
+                    player2_progression = plot_career_progression(player2_name, player2_season_stats)
 
         else:
             error_message = "Please enter two valid players"
@@ -76,7 +84,13 @@ def compare_players(request):
             player1_awards = get_player_awards(player1_name, player_dict)
             player2_awards = get_player_awards(player2_name, player_dict)
 
+            player1_season_stats = get_player_season_stats(player1_name, player_dict)
+            player2_season_stats = get_player_season_stats(player2_name, player_dict)
+
             stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
+            player1_progression = plot_career_progression(player1_name, player1_season_stats)
+            player2_progression = plot_career_progression(player2_name, player2_season_stats)
+
             featured_comparison = True
 
 
@@ -91,6 +105,8 @@ def compare_players(request):
         'player2_awards': player2_awards,
         'error_message': error_message,
         'stat_graph': stat_graph,
+        'player1_progression': player1_progression,
+        'player2_progression': player2_progression,
         'featured_comparison': featured_comparison
     }
     return render(request, 'nba_app/compare_players.html', context)
@@ -158,9 +174,9 @@ def get_player_info(player_name, player_dict):
     
     return player_info
 
-# Helper function to retrieve the statistics for a given player
+# Helper function to retrieve the career statistics for a given player
 def get_player_career_stats(player_name, player_dict):
-    cache_key = f"player_stats_{player_name.lower()}"
+    cache_key = f"player_career_stats_{player_name.lower()}"
     stats = cache.get(cache_key)
 
     # If not cached 
@@ -215,6 +231,49 @@ def get_player_career_stats(player_name, player_dict):
             cache.set(cache_key, stats, timeout=60*60*24)  # Cache timeout set to 24 hours
         
     return stats
+
+# Helper function to retrieve the season statistics for a given player
+def get_player_season_stats(player_name, player_dict):
+    cache_key = f"player_season_stats_{player_name.lower()}"
+    stats = cache.get(cache_key)
+
+    # If not cached 
+    if stats is None:
+        player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
+        if player:
+            player_id = player['id']
+            season_stats = fetch_player_season_stats(player_id)
+            
+            # Parse the season stats
+            stats = {
+                'SEASON_ID': [],
+                'PTS': [],
+                'REB': [],
+                'AST': [],
+                'STL': [],
+                'BLK': [],
+                'FG_PCT': [],
+                'FG3_PCT': [],
+                'FT_PCT': [],
+                'TOV': []
+            }
+
+            for season in season_stats:
+                stats['SEASON_ID'].append(season.get('SEASON_ID'))
+                stats['PTS'].append(season.get('PTS'))
+                stats['REB'].append(season.get('REB'))
+                stats['AST'].append(season.get('AST'))
+                stats['STL'].append(season.get('STL'))
+                stats['BLK'].append(season.get('BLK'))
+                stats['FG_PCT'].append(season.get('FG_PCT'))
+                stats['FG3_PCT'].append(season.get('FG3_PCT'))
+                stats['FT_PCT'].append(season.get('FT_PCT'))
+                stats['TOV'].append(season.get('TOV'))
+            
+            cache.set(cache_key, stats, timeout=60*60*24)  # Cache timeout set to 24 hours
+        
+    return stats
+
 
 # Helper function to retrieve the awards for a given player
 def get_player_awards(player_name, player_dict):
