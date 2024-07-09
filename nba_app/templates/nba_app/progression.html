@@ -1,11 +1,9 @@
-<div id="progresion-graphs">
-    <h2>{{ player1_info.full_name }} Career Progression</h2>
-    <div>
-        <img src="data:image/png;base64,{{ player1_progression }}" alt="{{ player1_info.full_name }} Career Progression">
-    </div>
-    
-    <h2>{{ player2_info.full_name }} Career Progression</h2>
-    <div>
-        <img src="data:image/png;base64,{{ player2_progression }}" alt="{{ player2_info.full_name }} Career Progression">
-    </div>
+<div id="progresion-graphs" class="graph-container">
+    <h2>Career Progression</h2>
+    {% for stat, graph in progression_graphs.items %}
+        <div class="progression-graph">
+            <h3>{{ stat }}</h3>
+            <img src="data:image/png;base64,{{ graph }}" alt="{{ stat }} Progression Graph">
+        </div> 
+    {% endfor %}
 </div>

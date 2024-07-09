@@ -34,7 +34,7 @@ def compare_players(request):
     player1_awards = player2_awards = None
     error_message = None
     stat_graph = None
-    player1_progression = player2_progression = None
+    progression_graphs = None
 
     if request.method == 'POST':
         form = PlayerSearchForm(request.POST)
@@ -64,8 +64,7 @@ def compare_players(request):
                     player2_season_stats = get_player_season_stats(player2_name, player_dict)
 
                     stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
-                    player1_progression = plot_career_progression(player1_name, player1_season_stats)
-                    player2_progression = plot_career_progression(player2_name, player2_season_stats)
+                    progression_graphs = plot_career_progression(player1_name, player2_name, player1_season_stats, player2_season_stats)
 
         else:
             error_message = "Please enter two valid players"
@@ -88,8 +87,7 @@ def compare_players(request):
             player2_season_stats = get_player_season_stats(player2_name, player_dict)
 
             stat_graph = plot_comparison(player1_name, player2_name, player1_stats, player2_stats)
-            player1_progression = plot_career_progression(player1_name, player1_season_stats)
-            player2_progression = plot_career_progression(player2_name, player2_season_stats)
+            progression_graphs = plot_career_progression(player1_name, player2_name, player1_season_stats, player2_season_stats)
 
             featured_comparison = True
 
@@ -105,8 +103,7 @@ def compare_players(request):
         'player2_awards': player2_awards,
         'error_message': error_message,
         'stat_graph': stat_graph,
-        'player1_progression': player1_progression,
-        'player2_progression': player2_progression,
+        'progression_graphs': progression_graphs,
         'featured_comparison': featured_comparison
     }
     return render(request, 'nba_app/compare_players.html', context)
