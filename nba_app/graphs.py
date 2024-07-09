@@ -58,3 +58,28 @@ def plot_comparison(player1_name, player2_name, player1_stats, player2_stats):
 
     # encode the plot to base64 - reccomended way of doing this
     return base64.b64encode(buf.getvalue()).decode('utf-8')
+
+def plot_career_progression(player_name, career_stats):
+    seasons = career_stats['Season']
+    points = career_stats['PTS']
+    assists = career_stats['AST']
+    rebounds = career_stats['REB']
+
+    plt.figure(figsize=(12, 8))
+
+    plt.plot(seasons, points, marker='o', label='Points')
+    plt.plot(seasons, assists, marker='o', label='Assists')
+    plt.plot(seasons, rebounds, marker='o', label='Rebounds')
+
+    plt.title(f'Career Progression of {player_name}', fontsize=20, fontweight='bold')
+    plt.xlabel('Season', fontsize=14, fontweight='bold')
+    plt.ylabel('Stats', fontsize=14, fontweight='bold')
+    plt.legend()
+    plt.grid(True)
+
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    plt.close()
+    buf.seek(0)
+
+    return base64.b64encode(buf.getvalue()).decode('utf-8')

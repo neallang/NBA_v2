@@ -53,3 +53,7 @@ td.image-cell {
 .highlight-cell {
     font-weight: bold;
 }
+
+.stat-graph-container {
+    margin: 50px auto;
+}
