@@ -9,7 +9,7 @@ from .utils.top_75 import is_top_75
 from .utils.hof_since_19 import is_hall_of_famer
 from .utils.scoring_titles import get_scoring_titles
 from .utils.web_scraping import is_deceased
-from .utils.fetch_data import fetch_player_dict, fetch_player_info, fetch_player_stats, fetch_player_awards, fetch_active_players
+from .utils.fetch_data import fetch_player_dict, fetch_player_info, fetch_player_career_stats, fetch_player_awards, fetch_active_players
 from .utils.ordinal import ordinal
 from .graphs import plot_comparison
 from django.core.cache import cache
@@ -52,8 +52,8 @@ def compare_players(request):
                 elif not player2_info:
                     error_message = f"Player '{player2_name}' does not exist."
                 else:
-                    player1_stats = get_player_stats(player1_name, player_dict)
-                    player2_stats = get_player_stats(player2_name, player_dict)
+                    player1_stats = get_player_career_stats(player1_name, player_dict)
+                    player2_stats = get_player_career_stats(player2_name, player_dict)
                     player1_awards = get_player_awards(player1_name, player_dict)
                     player2_awards = get_player_awards(player2_name, player_dict)
 
@@ -71,8 +71,8 @@ def compare_players(request):
 
             player1_info = get_player_info(player1_name, player_dict)
             player2_info = get_player_info(player2_name, player_dict)
-            player1_stats = get_player_stats(player1_name, player_dict)
-            player2_stats = get_player_stats(player2_name, player_dict)
+            player1_stats = get_player_career_stats(player1_name, player_dict)
+            player2_stats = get_player_career_stats(player2_name, player_dict)
             player1_awards = get_player_awards(player1_name, player_dict)
             player2_awards = get_player_awards(player2_name, player_dict)
 
@@ -159,7 +159,7 @@ def get_player_info(player_name, player_dict):
     return player_info
 
 # Helper function to retrieve the statistics for a given player
-def get_player_stats(player_name, player_dict):
+def get_player_career_stats(player_name, player_dict):
     cache_key = f"player_stats_{player_name.lower()}"
     stats = cache.get(cache_key)
 
@@ -168,7 +168,7 @@ def get_player_stats(player_name, player_dict):
         player = next((p for p in player_dict if p['full_name'].lower() == player_name.lower()), None)
         if player:
             player_id = player['id']
-            career_stats = fetch_player_stats(player_id)
+            career_stats = fetch_player_career_stats(player_id)
             career_totals = career_stats['CareerTotalsRegularSeason'][0]
             
             career_pts = career_totals.get('PTS')

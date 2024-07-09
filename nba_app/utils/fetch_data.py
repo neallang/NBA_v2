@@ -21,8 +21,8 @@ def fetch_player_info(player_id):
     return player_info
 
 # Utility function to retrieve player statistics from nba_api
-def fetch_player_stats(player_id):
-    cache_key = f"player_stats_{player_id}"
+def fetch_player_career_stats(player_id):
+    cache_key = f"player_career_stats_{player_id}"
     player_stats = cache.get(cache_key)
     if not player_stats:
         player_stats = playercareerstats.PlayerCareerStats(player_id=player_id).get_normalized_dict()
