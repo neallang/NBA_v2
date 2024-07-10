@@ -54,6 +54,7 @@ def fetch_active_players():
     # active_players = cache.get(cache_key)
     # if not active_players:
     all_players = fetch_player_dict()
-    activate_players = [player for player in all_players if player['is_active']]
+    # activate_players = [player for player in all_players if player['is_active']]
+    active_players = [player for player in all_players if player['is_active']]
         # cache.set(cache_key, activate_players, timeout=60*60)
     return active_players
