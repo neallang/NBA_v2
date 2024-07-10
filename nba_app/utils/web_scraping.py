@@ -5,10 +5,10 @@ from django.core.cache import cache
 
 # Utility function that searches wikipedia to see if a player is dead. Also uses RegEx to format
 def is_deceased(player_name):
-    cache_key = f"deceased_{player_name.lower().replace(' ', '_')}"
-    cached_result = cache.get(cache_key)
-    if cached_result:
-        return cached_result
+    # cache_key = f"deceased_{player_name.lower().replace(' ', '_')}"
+    # cached_result = cache.get(cache_key)
+    # if cached_result:
+    #     return cached_result
 
     search_url = f"https://en.wikipedia.org/wiki/{player_name.replace(' ', '_')}"
     response = requests.get(search_url)
@@ -31,9 +31,9 @@ def is_deceased(player_name):
                         age_at_death = age_at_death_match.group(1) if age_at_death_match else "Unknown"
 
                         result = (True, death_date, age_at_death)
-                        cache.set(cache_key, result, timeout=60*60*24) 
+                        # cache.set(cache_key, result, timeout=60*60*24) 
                         return result
 
     result = (False, None, None)
-    cache.set(cache_key, result, timeout=60*60)  # 1 hour
+    # cache.set(cache_key, result, timeout=60*60)  # 1 hour
     return result
