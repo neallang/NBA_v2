@@ -166,8 +166,7 @@ def get_player_info(player_name, player_dict):
                 'is_active': is_active
             }
             
-            # Cache the player info for 1 hour
-            cache.set(cache_key, player_info, timeout=60*60)
+            cache.set(cache_key, player_info, timeout=60*60)    # 1 hour
     
     return player_info
 
@@ -225,7 +224,7 @@ def get_player_career_stats(player_name, player_dict):
                 'games_played': games_played
             }
             
-            cache.set(cache_key, stats, timeout=60*60*24)  # Cache timeout set to 24 hours
+            cache.set(cache_key, stats, timeout=60*60)  
         
     return stats
 
@@ -267,10 +266,9 @@ def get_player_season_stats(player_name, player_dict):
                 stats['FT_PCT'].append(season.get('FT_PCT'))
                 stats['TOV'].append(season.get('TOV'))
             
-            cache.set(cache_key, stats, timeout=60*60*24)  # Cache timeout set to 24 hours
+            cache.set(cache_key, stats, timeout=60*60)  
         
     return stats
-
 
 # Helper function to retrieve the awards for a given player
 def get_player_awards(player_name, player_dict):
@@ -326,7 +324,7 @@ def get_player_awards(player_name, player_dict):
 
 
             # Cache the result
-            cache.set(cache_key, awards, timeout=60*60*24)  # Cache timeout set to 24 hours
+            cache.set(cache_key, awards, timeout=60*60)  
 
 
         
@@ -349,7 +347,7 @@ def get_featured_comparison():
             'player1': player1,
             'player2': player2
         }
-        cache.set(cache_key, featured_comparison, timeout=60*60*24)  # Cache for 1 day
+        cache.set(cache_key, featured_comparison, timeout=60*60)  
     
     return featured_comparison['player1'], featured_comparison['player2']
 

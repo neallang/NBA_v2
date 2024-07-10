@@ -35,5 +35,5 @@ def is_deceased(player_name):
                         return result
 
     result = (False, None, None)
-    cache.set(cache_key, result, timeout=60*60*24)  # 24 hours
+    cache.set(cache_key, result, timeout=60*60)  # 1 hour
     return result
