@@ -1,4 +1,5 @@
 import multiprocessing
+import os
 
 # Configuration for Gunicorn - avoid memory errors when deploying
 bind = f"0.0.0.0:{os.getenv('PORT', '8000')}"  # default to 8000
